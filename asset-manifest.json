@@ -1,20 +1,21 @@
 {
   "files": {
-    "main.css": "/The-Blazing-Grill-Menu/static/css/main.f4bd63c5.css",
-    "main.js": "/The-Blazing-Grill-Menu/static/js/main.96e3f9af.js",
+    "main.css": "/The-Blazing-Grill-Menu/static/css/main.fa9a4bb6.css",
+    "main.js": "/The-Blazing-Grill-Menu/static/js/main.02fe1453.js",
     "static/js/787.372b7e8a.chunk.js": "/The-Blazing-Grill-Menu/static/js/787.372b7e8a.chunk.js",
     "static/media/Pizzas.jpg": "/The-Blazing-Grill-Menu/static/media/Pizzas.6b1d4a7fa348ddc17f3a.jpg",
     "static/media/smokeyBackground1024_1.png": "/The-Blazing-Grill-Menu/static/media/smokeyBackground1024_1.168d2a96c81c0792de19.png",
+    "static/media/BurgersMenu.jpg": "/The-Blazing-Grill-Menu/static/media/BurgersMenu.7fca729847a043e28f23.jpg",
     "static/media/Vegetarian Pizza.jpg": "/The-Blazing-Grill-Menu/static/media/Vegetarian Pizza.da6e02b15fd804a5888e.jpg",
     "static/media/newSanhaLogo.png": "/The-Blazing-Grill-Menu/static/media/newSanhaLogo.cbdbc48217013a83b78f.png",
     "static/media/logo.svg": "/The-Blazing-Grill-Menu/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
     "index.html": "/The-Blazing-Grill-Menu/index.html",
-    "main.f4bd63c5.css.map": "/The-Blazing-Grill-Menu/static/css/main.f4bd63c5.css.map",
-    "main.96e3f9af.js.map": "/The-Blazing-Grill-Menu/static/js/main.96e3f9af.js.map",
+    "main.fa9a4bb6.css.map": "/The-Blazing-Grill-Menu/static/css/main.fa9a4bb6.css.map",
+    "main.02fe1453.js.map": "/The-Blazing-Grill-Menu/static/js/main.02fe1453.js.map",
     "787.372b7e8a.chunk.js.map": "/The-Blazing-Grill-Menu/static/js/787.372b7e8a.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.f4bd63c5.css",
-    "static/js/main.96e3f9af.js"
+    "static/css/main.fa9a4bb6.css",
+    "static/js/main.02fe1453.js"
   ]
 }
