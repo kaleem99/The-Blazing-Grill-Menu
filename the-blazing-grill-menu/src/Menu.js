@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { db, storage } from "./database/config";
 import MenuItemsSection from "./frontend/menuSections";
 import pizzas from "./assets/Pizzas.jpg";
-import pizza2 from "./assets/Vegetarian Pizza.jpg";
+import pizza2 from "./assets/VegetarianPizza.jpg";
 import sanhaImage from "./assets/newSanhaLogo.png";
 import {
   collection,
@@ -96,7 +96,7 @@ function Menu({ state, setState }) {
           <div
             style={{
               width: "100%",
-              height: "30%",
+              height: "27%",
               border: "1px solid white",
               marginBottom: "2vh",
             }}
@@ -211,27 +211,35 @@ function Menu({ state, setState }) {
             borderLeft: "1px solid white",
           }}
         >
-          <img
+          <div
             style={{
-              width: "11%",
-              height: "15%",
-              position: "absolute",
-              top: "5%",
-              margin: "auto",
-              right: "1%",
-
-              // right: 0,
+              width: "100%",
+              height: "100%",
+              border: "1px solid white",
+              // marginBottom: "2vh",
+              position: "relative",
+              backgroundImage: `url(${pizza2})`,
+              backgroundPosition: "center",
+              backgroundSize: "cover",
             }}
-            alt=""
-            className="BlazingImage"
-            src={sanhaImage}
-          ></img>
-          <img
-            style={{ width: "100%", height: "100%" }}
-            alt=""
-            className="BlazingImage"
-            src={pizza2}
-          ></img>
+          >
+            <img
+              style={{
+                width: "50%",
+                height: "12%",
+                position: "relative",
+                top: "3%",
+                margin: "auto",
+                right: "1%",
+
+                // right: 0,
+              }}
+              alt=""
+              className="BlazingImage"
+              src={sanhaImage}
+            ></img>
+           
+          </div>
         </div>
       </div>
     </div>

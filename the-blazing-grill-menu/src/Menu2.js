@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { db, storage } from "./database/config";
 import MenuItemsSection from "./frontend/menuSections";
 import Burger from "./assets/BurgersMenu.jpg";
-import pizza2 from "./assets/Vegetarian Pizza.jpg";
+import pizza2 from "./assets/VegetarianPizza.jpg";
 import sanhaImage from "./assets/newSanhaLogo.png";
 import {
   collection,
@@ -16,7 +16,8 @@ function MenuPage2({ state, setState }) {
   const [chicken, setChicken] = useState([]);
   const [burgers, setBurgers] = useState([]);
   const [gourmetBurger, setGourmetBurger] = useState([]);
-
+  const [chickenBurgers, setChickenBurgers] = useState([]);
+  const [beefburgers, setBeefBurgers] = useState([]);
   useEffect(() => {
     if (state.length === 0) {
       fetchPost();
@@ -39,6 +40,24 @@ function MenuPage2({ state, setState }) {
         const burgers = newDataArr.filter(
           (category) => category.name === "Burgers"
         );
+
+        if (burgers.length > 0) {
+          setChickenBurgers(
+            burgers[0].data.filter(
+              (item) => item.name.includes("Chicken") && item
+            )
+          );
+          setBeefBurgers(
+            burgers[0].data.filter(
+              (item) =>
+                (item.name.includes("Cheese") ||
+                  item.name.includes("Blazing") ||
+                  item.name.includes("Egg")) &&
+                !item.name.includes("Double") &&
+                item
+            )
+          );
+        }
         const gourmetBurgers = newDataArr.filter(
           (category) => category.name === "Gourmet Burgers"
         );
@@ -60,11 +79,13 @@ function MenuPage2({ state, setState }) {
       });
     });
   };
-  console.log(state);
   const formatNames = (name) => {
     let result = name;
     if (name.toLowerCase().includes("single")) {
       result = name.replace(/\bSingle\b/g, "");
+    }
+    if (name.toLowerCase().includes("double")) {
+      result = name.replace(/\bDouble\b/g, "");
     }
     return result;
   };
@@ -78,28 +99,24 @@ function MenuPage2({ state, setState }) {
               height: "22%",
               border: "1px solid white",
               marginBottom: "2vh",
+              position: "relative",
+              backgroundImage: `url(${Burger})`,
+              backgroundPosition: "center",
+              backgroundSize: "cover",
             }}
           >
             <img
               style={{
-                width: "10%",
-                height: "14%",
-                position: "absolute",
+                width: "20%",
+                height: "40%",
+                position: "relative",
                 top: "1%",
-                margin: "auto",
-                left: "27%",
-
-                // right: 0,
+                left: "40%",
+                zIndex: 1,
               }}
               alt=""
               className="BlazingImage"
               src={sanhaImage}
-            ></img>
-            <img
-              style={{ width: "100%", height: "100%" }}
-              alt=""
-              className="BlazingImage"
-              src={Burger}
             ></img>
           </div>
           <div className="SectionName">
@@ -121,8 +138,24 @@ function MenuPage2({ state, setState }) {
                 // gridGap: "10px",
               }}
             >
-              {burgers
-                .sort((a, b) => a.price - b.price)
+              <div className="NameAndPriceBurgers">
+                <p style={{ fontSize: "28px" }} className="itemNames">
+                  Chicken
+                </p>
+              </div>
+              {chickenBurgers
+                .sort((a, b) => {
+                  const nameA = a.name.toUpperCase();
+                  const nameB = b.name.toUpperCase();
+
+                  if (nameA < nameB) {
+                    return -1;
+                  }
+                  if (nameA > nameB) {
+                    return 1;
+                  }
+                  return 0;
+                })
                 .map((items, i) => {
                   return (
                     <div className="ItemsData">
@@ -130,9 +163,6 @@ function MenuPage2({ state, setState }) {
                         <div>
                           {i === 0 && <p className="">None</p>}
                           <p className="itemNames">{formatNames(items.name)}</p>
-                          <div className="Information">
-                            {items.Information}{" "}
-                          </div>
                         </div>
                         <div>
                           {i === 0 && <p className="price">Single</p>}
@@ -142,13 +172,62 @@ function MenuPage2({ state, setState }) {
                         <div>
                           {i === 0 && <p className="price">Double</p>}
 
-                          {items.name !== "Shredded Chicken Burger" && (
-                            <p className="price">
-                              R{(parseFloat(items.price) + 20).toFixed(2)}
-                            </p>
-                          )}
+                          {items.name !== "Shredded Chicken Burger" &&
+                            items.name !== "Shredded Prego Chicken Burger" && (
+                              <p className="price">
+                                R{(parseFloat(items.price) + 20).toFixed(2)}
+                              </p>
+                            )}
                         </div>
                       </div>
+                      <div className="Information">{items.Information} </div>
+                    </div>
+                  );
+                })}
+              <br></br>
+              <div className="NameAndPriceBurgers">
+                <p style={{ fontSize: "28px" }} className="itemNames">
+                  Beef
+                </p>
+              </div>
+              {beefburgers
+                .sort((a, b) => {
+                  const nameA = a.name.toUpperCase();
+                  const nameB = b.name.toUpperCase();
+
+                  if (nameA < nameB) {
+                    return -1;
+                  }
+                  if (nameA > nameB) {
+                    return 1;
+                  }
+                  return 0;
+                })
+                .map((items, i) => {
+                  return (
+                    <div className="ItemsData">
+                      <div className="NameAndPriceBurgers">
+                        <div>
+                          {i === 0 && <p className="">None</p>}
+                          <p className="itemNames">{formatNames(items.name)}</p>
+                        </div>
+                        <div>
+                          {i === 0 && <p className="price">Single</p>}
+
+                          <p className="price"> R{items.price}</p>
+                        </div>
+                        <div>
+                          {i === 0 && <p className="price">Double</p>}
+
+                          {items.name !== "Shredded Chicken Burger" &&
+                            items.name !== "Shredded Prego Chicken Burger" && (
+                              <p className="price">
+                                R{(parseFloat(items.price) + 20).toFixed(2)}
+                              </p>
+                            )}
+                        </div>
+                      </div>
+                      <div className="Information">{items.Information} </div>
                     </div>
                   );
                 })}
