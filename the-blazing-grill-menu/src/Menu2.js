@@ -52,7 +52,8 @@ function MenuPage2({ state, setState }) {
               (item) =>
                 (item.name.includes("Cheese") ||
                   item.name.includes("Blazing") ||
-                  item.name.includes("Egg")) &&
+                  item.name.includes("Egg") ||
+                  item.name.includes("Jalapeno")) &&
                 !item.name.includes("Double") &&
                 item
             )
@@ -92,13 +93,13 @@ function MenuPage2({ state, setState }) {
   return state.length > 1 ? (
     <div className="Menu2">
       <div className="Left2">
-        <div style={{ width: "96%", height: "96vh", margin: "2vh auto" }}>
+        <div style={{ width: "98%", height: "96vh", margin: "1vh auto" }}>
           <div
             style={{
               width: "100%",
-              height: "22%",
+              height: "18%",
               border: "1px solid white",
-              marginBottom: "2vh",
+              marginBottom: "1vh",
               position: "relative",
               backgroundImage: `url(${Burger})`,
               backgroundPosition: "center",
@@ -108,7 +109,7 @@ function MenuPage2({ state, setState }) {
             <img
               style={{
                 width: "20%",
-                height: "40%",
+                height: "55%",
                 position: "relative",
                 top: "1%",
                 left: "40%",
@@ -139,7 +140,10 @@ function MenuPage2({ state, setState }) {
               }}
             >
               <div className="NameAndPriceBurgers">
-                <p style={{ fontSize: "28px" }} className="itemNames">
+                <p
+                  style={{ fontSize: "32px", color: "white" }}
+                  className="itemNames"
+                >
                   Chicken
                 </p>
               </div>
@@ -161,16 +165,20 @@ function MenuPage2({ state, setState }) {
                     <div className="ItemsData">
                       <div className="NameAndPriceBurgers">
                         <div>
-                          {i === 0 && <p className="">None</p>}
+                          {/* {i === 0 && <p className="">None</p>} */}
                           <p className="itemNames">{formatNames(items.name)}</p>
                         </div>
                         <div>
-                          {i === 0 && <p className="price">Single</p>}
+                          {i === 0 && !items.name.includes("Shredded") && (
+                            <p className="price">Single</p>
+                          )}
 
                           <p className="price"> R{items.price}</p>
                         </div>
                         <div>
-                          {i === 0 && <p className="price">Double</p>}
+                          {i === 0 && !items.name.includes("Shredded") && (
+                            <p className="price">Double</p>
+                          )}
 
                           {items.name !== "Shredded Chicken Burger" &&
                             items.name !== "Shredded Prego Chicken Burger" && (
@@ -186,7 +194,10 @@ function MenuPage2({ state, setState }) {
                 })}
               <br></br>
               <div className="NameAndPriceBurgers">
-                <p style={{ fontSize: "28px" }} className="itemNames">
+                <p
+                  style={{ fontSize: "32px", color: "white" }}
+                  className="itemNames"
+                >
                   Beef
                 </p>
               </div>
@@ -208,7 +219,7 @@ function MenuPage2({ state, setState }) {
                     <div className="ItemsData">
                       <div className="NameAndPriceBurgers">
                         <div>
-                          {i === 0 && <p className="">None</p>}
+                          {/* {i === 0 && <p className="">None</p>} */}
                           <p className="itemNames">{formatNames(items.name)}</p>
                         </div>
                         <div>
@@ -236,18 +247,18 @@ function MenuPage2({ state, setState }) {
         </div>
       </div>
       <div className="Middle2">
-        <div style={{ width: "96%", height: "96vh", margin: "2vh auto" }}>
+        <div style={{ width: "98%", height: "96vh", margin: "1vh auto" }}>
+          <div className="SectionName">
+            <text>{state[2].name !== undefined && state[2].name}</text>
+          </div>
           <div
             style={{
               width: "100%",
               height: "auto",
               border: "1px solid white",
-              marginBottom: "2vh",
+              marginBottom: "1vh",
             }}
           >
-            <div className="SectionName">
-              <text>{state[2].name !== undefined && state[2].name}</text>
-            </div>
             <div
               style={{
                 width: "100%",
@@ -331,7 +342,7 @@ function MenuPage2({ state, setState }) {
                     <div className="ItemsData">
                       <div className="NameAndPriceBurgers">
                         <div>
-                          {i === 0 && <p className="">None</p>}
+                          {/* {i === 0 && <p className="">None</p>} */}
                           <p className="itemNames">{formatNames(items.name)}</p>
                         </div>
                         <div>
@@ -360,10 +371,10 @@ function MenuPage2({ state, setState }) {
       <div className="Right2">
         <div
           style={{
-            width: "96%",
+            width: "98%",
             height: "auto",
             // backgroundColor: "red",
-            margin: "2vh auto",
+            margin: "1vh auto",
             // border: "1px solid",
           }}
         >
@@ -385,7 +396,7 @@ function MenuPage2({ state, setState }) {
             <br></br>
             <text>Menu</text>
           </div>
-          <div className="SectionName" style={{ marginTop: "4%" }}>
+          <div className="SectionName" style={{ marginTop: "1vh" }}>
             <text>{state[3].name !== undefined && state[3].name}</text>
           </div>
           <div
@@ -401,20 +412,26 @@ function MenuPage2({ state, setState }) {
               .sort((a, b) => a.price - b.price)
               .map((items) => {
                 return (
-                  <div className="ItemsData">
-                    <div className="NameAndPrice">
-                      <p className="itemNames">{items.name}</p>
-                      <div>
-                        <p className="price">R{items.price}</p>
+                  <>
+                    <div className="ItemsData">
+                      <div className="NameAndPrice">
+                        <p className="itemNames">{items.name}</p>
+                        <div>
+                          <p className="price">R{items.price}</p>
+                        </div>
                       </div>
                     </div>
                     <div className="Information">{items.Information} </div>
-                  </div>
+                  </>
                 );
               })}
           </div>
-          <div className="SectionName" style={{ marginTop: "4%" }}>
-            <text>{state[4].name !== undefined && state[4].name}</text>
+          <div className="SectionName" style={{ marginTop: "1vh" }}>
+            <text>
+              {state[4].name !== undefined &&
+                state[4].name.includes("Chicken") &&
+                "Wings"}
+            </text>
           </div>
           <div
             style={{

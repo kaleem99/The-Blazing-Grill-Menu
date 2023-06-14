@@ -43,5 +43,6 @@ const MenuItemsSection = [
     name: "Air Fryer Pizza",
     img: "https://kaleem99.github.io/The-Blazing-Grill-Images/Air%20Fryer%20Pizza.png",
   },
+  { name: "Extras" },
 ];
 export default MenuItemsSection;
