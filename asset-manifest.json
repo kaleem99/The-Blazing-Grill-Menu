@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/The-Blazing-Grill-Menu/static/css/main.5391caeb.css",
-    "main.js": "/The-Blazing-Grill-Menu/static/js/main.e45526f8.js",
+    "main.css": "/The-Blazing-Grill-Menu/static/css/main.f5982505.css",
+    "main.js": "/The-Blazing-Grill-Menu/static/js/main.7de8d74a.js",
     "static/js/787.372b7e8a.chunk.js": "/The-Blazing-Grill-Menu/static/js/787.372b7e8a.chunk.js",
     "static/media/Pizzas.jpg": "/The-Blazing-Grill-Menu/static/media/Pizzas.6b1d4a7fa348ddc17f3a.jpg",
     "static/media/smokeyBackground1024_1.png": "/The-Blazing-Grill-Menu/static/media/smokeyBackground1024_1.168d2a96c81c0792de19.png",
@@ -10,12 +10,12 @@
     "static/media/newSanhaLogo.png": "/The-Blazing-Grill-Menu/static/media/newSanhaLogo.cbdbc48217013a83b78f.png",
     "static/media/logo.svg": "/The-Blazing-Grill-Menu/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
     "index.html": "/The-Blazing-Grill-Menu/index.html",
-    "main.5391caeb.css.map": "/The-Blazing-Grill-Menu/static/css/main.5391caeb.css.map",
-    "main.e45526f8.js.map": "/The-Blazing-Grill-Menu/static/js/main.e45526f8.js.map",
+    "main.f5982505.css.map": "/The-Blazing-Grill-Menu/static/css/main.f5982505.css.map",
+    "main.7de8d74a.js.map": "/The-Blazing-Grill-Menu/static/js/main.7de8d74a.js.map",
     "787.372b7e8a.chunk.js.map": "/The-Blazing-Grill-Menu/static/js/787.372b7e8a.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.5391caeb.css",
-    "static/js/main.e45526f8.js"
+    "static/css/main.f5982505.css",
+    "static/js/main.7de8d74a.js"
   ]
 }
