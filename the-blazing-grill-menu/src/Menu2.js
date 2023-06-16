@@ -4,6 +4,8 @@ import MenuItemsSection from "./frontend/menuSections";
 import Burger from "./assets/BurgersMenu.jpg";
 import pizza2 from "./assets/VegetarianPizza.jpg";
 import sanhaImage from "./assets/newSanhaLogo.png";
+import Draggable from "react-draggable";
+
 import {
   collection,
   addDoc,
@@ -94,278 +96,305 @@ function MenuPage2({ state, setState }) {
     <div className="Menu2">
       <div className="Left2">
         <div style={{ width: "98%", height: "96vh", margin: "1vh auto" }}>
-          <div
-            style={{
-              width: "100%",
-              height: "18%",
-              border: "1px solid white",
-              marginBottom: "1vh",
-              position: "relative",
-              backgroundImage: `url(${Burger})`,
-              backgroundPosition: "center",
-              backgroundSize: "cover",
-            }}
-          >
-            <img
-              style={{
-                width: "20%",
-                height: "55%",
-                position: "relative",
-                top: "1%",
-                left: "40%",
-                zIndex: 1,
-              }}
-              alt=""
-              className="BlazingImage"
-              src={sanhaImage}
-            ></img>
-          </div>
-          <div className="SectionName">
-            <text>{state[0].name !== undefined && state[0].name}</text>
-          </div>
-          <div
-            style={{
-              width: "100%",
-              height: "auto",
-              border: "1px solid white",
-              // borderBottom: "0px",
-              //   marginTop: "4%",
-            }}
-          >
+          <Draggable>
             <div
               style={{
-                display: "grid",
-                gridTemplateColumns: "auto",
-                // gridGap: "10px",
+                width: "100%",
+                height: "18%",
+                border: "1px solid white",
+                marginBottom: "1vh",
+                position: "relative",
+                backgroundImage: `url(${Burger})`,
+                backgroundPosition: "center",
+                backgroundSize: "cover",
               }}
             >
-              <div className="NameAndPriceBurgers">
-                <p
-                  style={{ fontSize: "32px", color: "white" }}
-                  className="itemNames"
-                >
-                  Chicken
-                </p>
-              </div>
-              {chickenBurgers
-                .sort((a, b) => {
-                  const nameA = a.name.toUpperCase();
-                  const nameB = b.name.toUpperCase();
-
-                  if (nameA < nameB) {
-                    return -1;
-                  }
-                  if (nameA > nameB) {
-                    return 1;
-                  }
-                  return 0;
-                })
-                .map((items, i) => {
-                  return (
-                    <div className="ItemsData">
-                      <div className="NameAndPriceBurgers">
-                        <div>
-                          {/* {i === 0 && <p className="">None</p>} */}
-                          <p className="itemNames">{formatNames(items.name)}</p>
-                        </div>
-                        <div>
-                          {i === 0 && !items.name.includes("Shredded") && (
-                            <p className="price">Single</p>
-                          )}
-
-                          <p className="price"> R{items.price}</p>
-                        </div>
-                        <div>
-                          {i === 0 && !items.name.includes("Shredded") && (
-                            <p className="price">Double</p>
-                          )}
-
-                          {items.name !== "Shredded Chicken Burger" &&
-                            items.name !== "Shredded Prego Chicken Burger" && (
-                              <p className="price">
-                                R{(parseFloat(items.price) + 20).toFixed(2)}
-                              </p>
-                            )}
-                        </div>
-                      </div>
-                      <div className="Information">{items.Information} </div>
-                    </div>
-                  );
-                })}
-              <br></br>
-              <div className="NameAndPriceBurgers">
-                <p
-                  style={{ fontSize: "32px", color: "white" }}
-                  className="itemNames"
-                >
-                  Beef
-                </p>
-              </div>
-              {beefburgers
-                .sort((a, b) => {
-                  const nameA = a.name.toUpperCase();
-                  const nameB = b.name.toUpperCase();
-
-                  if (nameA < nameB) {
-                    return -1;
-                  }
-                  if (nameA > nameB) {
-                    return 1;
-                  }
-                  return 0;
-                })
-                .map((items, i) => {
-                  return (
-                    <div className="ItemsData">
-                      <div className="NameAndPriceBurgers">
-                        <div>
-                          {/* {i === 0 && <p className="">None</p>} */}
-                          <p className="itemNames">{formatNames(items.name)}</p>
-                        </div>
-                        <div>
-                          {i === 0 && <p className="price">Single</p>}
-
-                          <p className="price"> R{items.price}</p>
-                        </div>
-                        <div>
-                          {i === 0 && <p className="price">Double</p>}
-
-                          {items.name !== "Shredded Chicken Burger" &&
-                            items.name !== "Shredded Prego Chicken Burger" && (
-                              <p className="price">
-                                R{(parseFloat(items.price) + 20).toFixed(2)}
-                              </p>
-                            )}
-                        </div>
-                      </div>
-                      <div className="Information">{items.Information} </div>
-                    </div>
-                  );
-                })}
+              <img
+                style={{
+                  width: "20%",
+                  height: "55%",
+                  position: "relative",
+                  top: "1%",
+                  left: "40%",
+                  zIndex: 1,
+                }}
+                alt=""
+                className="BlazingImage"
+                src={sanhaImage}
+                draggable={false}
+              ></img>
             </div>
-          </div>
+          </Draggable>
+          <Draggable>
+            <div>
+              <div className="SectionName">
+                <text>{state[0].name !== undefined && state[0].name}</text>
+              </div>
+              <div
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  border: "1px solid white",
+                  // borderBottom: "0px",
+                  //   marginTop: "4%",
+                }}
+              >
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "auto",
+                    // gridGap: "10px",
+                  }}
+                >
+                  <div className="NameAndPriceBurgers">
+                    <p
+                      style={{ fontSize: "32px", color: "white" }}
+                      className="itemNames"
+                    >
+                      Chicken
+                    </p>
+                  </div>
+                  {chickenBurgers
+                    .sort((a, b) => {
+                      const nameA = a.name.toUpperCase();
+                      const nameB = b.name.toUpperCase();
+
+                      if (nameA < nameB) {
+                        return -1;
+                      }
+                      if (nameA > nameB) {
+                        return 1;
+                      }
+                      return 0;
+                    })
+                    .map((items, i) => {
+                      return (
+                        <div className="ItemsData">
+                          <div className="NameAndPriceBurgers">
+                            <div>
+                              {/* {i === 0 && <p className="">None</p>} */}
+                              <p className="itemNames">
+                                {formatNames(items.name)}
+                              </p>
+                            </div>
+                            <div>
+                              {i === 0 && !items.name.includes("Shredded") && (
+                                <p className="price">Single</p>
+                              )}
+
+                              <p className="price"> R{items.price}</p>
+                            </div>
+                            <div>
+                              {i === 0 && !items.name.includes("Shredded") && (
+                                <p className="price">Double</p>
+                              )}
+
+                              {items.name !== "Shredded Chicken Burger" &&
+                                items.name !==
+                                  "Shredded Prego Chicken Burger" && (
+                                  <p className="price">
+                                    R{(parseFloat(items.price) + 20).toFixed(2)}
+                                  </p>
+                                )}
+                            </div>
+                          </div>
+                          <div className="Information">
+                            {items.Information}{" "}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  <br></br>
+                  <div className="NameAndPriceBurgers">
+                    <p
+                      style={{ fontSize: "32px", color: "white" }}
+                      className="itemNames"
+                    >
+                      Beef
+                    </p>
+                  </div>
+                  {beefburgers
+                    .sort((a, b) => {
+                      const nameA = a.name.toUpperCase();
+                      const nameB = b.name.toUpperCase();
+
+                      if (nameA < nameB) {
+                        return -1;
+                      }
+                      if (nameA > nameB) {
+                        return 1;
+                      }
+                      return 0;
+                    })
+                    .map((items, i) => {
+                      return (
+                        <div className="ItemsData">
+                          <div className="NameAndPriceBurgers">
+                            <div>
+                              {/* {i === 0 && <p className="">None</p>} */}
+                              <p className="itemNames">
+                                {formatNames(items.name)}
+                              </p>
+                            </div>
+                            <div>
+                              {i === 0 && <p className="price">Single</p>}
+
+                              <p className="price"> R{items.price}</p>
+                            </div>
+                            <div>
+                              {i === 0 && <p className="price">Double</p>}
+
+                              {items.name !== "Shredded Chicken Burger" &&
+                                items.name !==
+                                  "Shredded Prego Chicken Burger" && (
+                                  <p className="price">
+                                    R{(parseFloat(items.price) + 20).toFixed(2)}
+                                  </p>
+                                )}
+                            </div>
+                          </div>
+                          <div className="Information">
+                            {items.Information}{" "}
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+            </div>
+          </Draggable>
         </div>
       </div>
       <div className="Middle2">
         <div style={{ width: "98%", height: "96vh", margin: "1vh auto" }}>
-          <div className="SectionName">
-            <text>{state[2].name !== undefined && state[2].name}</text>
-          </div>
-          <div
-            style={{
-              width: "100%",
-              height: "auto",
-              border: "1px solid white",
-              marginBottom: "1vh",
-            }}
-          >
-            <div
-              style={{
-                width: "100%",
-                height: "auto",
-                // border: "1px solid white",
-                // borderBottom: "0px",
-                //   marginTop: "4%",
-              }}
-            >
+          <Draggable>
+            <div>
+              <div className="SectionName">
+                <text>{state[2].name !== undefined && state[2].name}</text>
+              </div>
               <div
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "auto",
-                  //   gridGap: "10px",
+                  width: "100%",
+                  height: "auto",
+                  border: "1px solid white",
+                  marginBottom: "1vh",
                 }}
               >
-                {chicken
-                  .sort((a, b) => a.price - b.price)
-                  .map((items, i) => {
-                    return (
-                      <div className="ItemsData">
-                        <div className="NameAndPriceChicken">
-                          <div>
-                            {i === 0 && (
-                              <>
-                                <p className="">Name</p>
-                              </>
-                            )}
-                            <p className="itemNames">{items.name}</p>
-                          </div>
-                          <div>
-                            {i === 0 && (
-                              <>
-                                <p className="price">Chicken</p>
-                              </>
-                            )}
+                <div
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    // border: "1px solid white",
+                    // borderBottom: "0px",
+                    //   marginTop: "4%",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "auto",
+                      //   gridGap: "10px",
+                    }}
+                  >
+                    {chicken
+                      .sort((a, b) => a.price - b.price)
+                      .map((items, i) => {
+                        return (
+                          <div className="ItemsData">
+                            <div className="NameAndPriceChicken">
+                              <div>
+                                {i === 0 && (
+                                  <>
+                                    <p className="">Name</p>
+                                  </>
+                                )}
+                                <p className="itemNames">{items.name}</p>
+                              </div>
+                              <div>
+                                {i === 0 && (
+                                  <>
+                                    <p className="price">Chicken</p>
+                                  </>
+                                )}
 
-                            <p className="price"> R{items.price}</p>
-                          </div>
-                          <div>
-                            {i === 0 && (
-                              <>
-                                <p className="price">With Fries</p>
-                              </>
-                            )}
+                                <p className="price"> R{items.price}</p>
+                              </div>
+                              <div>
+                                {i === 0 && (
+                                  <>
+                                    <p className="price">With Fries</p>
+                                  </>
+                                )}
 
-                            <p className="price">
-                              R{(parseFloat(items.price) + 10).toFixed(2)}
-                            </p>
+                                <p className="price">
+                                  R{(parseFloat(items.price) + 10).toFixed(2)}
+                                </p>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                        );
+                      })}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="SectionName">
-            <text>{state[1].name !== undefined && state[1].name}</text>
-          </div>
-          <div
-            style={{
-              width: "100%",
-              height: "auto",
-              border: "1px solid white",
-              // borderBottom: "0px",
-              //   marginTop: "4%",
-            }}
-          >
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "auto",
-                gridGap: "10px",
-              }}
-            >
-              {gourmetBurger
-                .sort((a, b) => a.price - b.price)
-                .map((items, i) => {
-                  return (
-                    <div className="ItemsData">
-                      <div className="NameAndPriceBurgers">
-                        <div>
-                          {/* {i === 0 && <p className="">None</p>} */}
-                          <p className="itemNames">{formatNames(items.name)}</p>
-                        </div>
-                        <div>
-                          {i === 0 && <p className="price">Single</p>}
+          </Draggable>
+          <Draggable>
+            <div>
+              <div className="SectionName">
+                <text>{state[1].name !== undefined && state[1].name}</text>
+              </div>
+              <div
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  border: "1px solid white",
+                  // borderBottom: "0px",
+                  //   marginTop: "4%",
+                }}
+              >
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "auto",
+                    gridGap: "10px",
+                  }}
+                >
+                  {gourmetBurger
+                    .sort((a, b) => a.price - b.price)
+                    .map((items, i) => {
+                      return (
+                        <div className="ItemsData">
+                          <div className="NameAndPriceBurgers">
+                            <div>
+                              {/* {i === 0 && <p className="">None</p>} */}
+                              <p className="itemNames">
+                                {formatNames(items.name)}
+                              </p>
+                            </div>
+                            <div>
+                              {i === 0 && <p className="price">Single</p>}
 
-                          <p className="price"> R{items.price}</p>
-                        </div>
-                        <div>
-                          {i === 0 && <p className="price">Double</p>}
+                              <p className="price"> R{items.price}</p>
+                            </div>
+                            <div>
+                              {i === 0 && <p className="price">Double</p>}
 
-                          {items.name.includes("Single") && (
-                            <p className="price">
-                              R{(parseFloat(items.price) + 30).toFixed(2)}
-                            </p>
-                          )}
+                              {items.name.includes("Single") && (
+                                <p className="price">
+                                  R{(parseFloat(items.price) + 30).toFixed(2)}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                          <div className="Information">{items.Information}</div>
                         </div>
-                      </div>
-                      <div className="Information">{items.Information}</div>
-                    </div>
-                  );
-                })}
+                      );
+                    })}
+                </div>
+              </div>
             </div>
-          </div>
+          </Draggable>
         </div>
       </div>
       <div className="Right2">
@@ -378,86 +407,97 @@ function MenuPage2({ state, setState }) {
             // border: "1px solid",
           }}
         >
-          <div
-            style={{
-              width: "100%",
-              height: "40%",
-              //   border: "1px solid white",
-              // background: "red",
-              margin: "auto",
-            }}
-          >
-            <img
-              style={{ width: "60%" }}
-              alt=""
-              className="BlazingImage"
-              src="https://www.theblazinggrill.co.za/wp-content/uploads/2021/07/TBG_Final_TransWhite.png"
-            ></img>
-            <br></br>
-            <text>Menu</text>
-          </div>
-          <div className="SectionName" style={{ marginTop: "1vh" }}>
-            <text>{state[3].name !== undefined && state[3].name}</text>
-          </div>
-          <div
-            style={{
-              width: "100%",
-              height: "auto",
-              border: "1px solid white",
-              // margin: "3% auto",
-              // borderBottom: "0px",
-            }}
-          >
-            {state[3].data
-              .sort((a, b) => a.price - b.price)
-              .map((items) => {
-                return (
-                  <>
-                    <div className="ItemsData">
-                      <div className="NameAndPrice">
-                        <p className="itemNames">{items.name}</p>
-                        <div>
-                          <p className="price">R{items.price}</p>
+          <Draggable>
+            <div
+              style={{
+                width: "100%",
+                height: "40%",
+                //   border: "1px solid white",
+                // background: "red",
+                margin: "auto",
+              }}
+            >
+              <img
+                draggable={false}
+                style={{ width: "60%" }}
+                alt=""
+                className="BlazingImage"
+                src="https://www.theblazinggrill.co.za/wp-content/uploads/2021/07/TBG_Final_TransWhite.png"
+              ></img>
+              <br></br>
+              <text>Menu</text>
+            </div>
+          </Draggable>
+          <Draggable>
+            <div>
+              {" "}
+              <div className="SectionName" style={{ marginTop: "1vh" }}>
+                <text>{state[3].name !== undefined && state[3].name}</text>
+              </div>
+              <div
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  border: "1px solid white",
+                  // margin: "3% auto",
+                  // borderBottom: "0px",
+                }}
+              >
+                {state[3].data
+                  .sort((a, b) => a.price - b.price)
+                  .map((items) => {
+                    return (
+                      <>
+                        <div className="ItemsData">
+                          <div className="NameAndPrice">
+                            <p className="itemNames">{items.name}</p>
+                            <div>
+                              <p className="price">R{items.price}</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="Information">{items.Information} </div>
+                      </>
+                    );
+                  })}
+              </div>
+            </div>
+          </Draggable>
+          <Draggable>
+            <div>
+              <div className="SectionName" style={{ marginTop: "1vh" }}>
+                <text>
+                  {state[4].name !== undefined &&
+                    state[4].name.includes("Chicken") &&
+                    "Wings"}
+                </text>
+              </div>
+              <div
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  border: "1px solid white",
+                  // margin: "3% auto",
+                  // borderBottom: "0px",
+                }}
+              >
+                {state[4].data
+                  .sort((a, b) => a.price - b.price)
+                  .map((items) => {
+                    return (
+                      <div className="ItemsData">
+                        <div className="NameAndPrice">
+                          <p className="itemNames">{items.name}</p>
+                          <div>
+                            <p className="price">R{items.price}</p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="Information">{items.Information} </div>
-                  </>
-                );
-              })}
-          </div>
-          <div className="SectionName" style={{ marginTop: "1vh" }}>
-            <text>
-              {state[4].name !== undefined &&
-                state[4].name.includes("Chicken") &&
-                "Wings"}
-            </text>
-          </div>
-          <div
-            style={{
-              width: "100%",
-              height: "auto",
-              border: "1px solid white",
-              // margin: "3% auto",
-              // borderBottom: "0px",
-            }}
-          >
-            {state[4].data
-              .sort((a, b) => a.price - b.price)
-              .map((items) => {
-                return (
-                  <div className="ItemsData">
-                    <div className="NameAndPrice">
-                      <p className="itemNames">{items.name}</p>
-                      <div>
-                        <p className="price">R{items.price}</p>
-                      </div>
-                    </div>
-                    {/* <div className="Information">{items.Information} </div> */}
-                  </div>
-                );
-              })}
-          </div>
+                    );
+                  })}
+              </div>
+            </div>
+          </Draggable>
         </div>
       </div>
     </div>

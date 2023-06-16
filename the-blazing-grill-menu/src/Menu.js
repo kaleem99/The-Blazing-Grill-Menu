@@ -4,6 +4,7 @@ import MenuItemsSection from "./frontend/menuSections";
 import pizzas from "./assets/Pizzas.jpg";
 import pizza2 from "./assets/VegetarianPizza.jpg";
 import sanhaImage from "./assets/newSanhaLogo.png";
+
 import {
   collection,
   addDoc,
