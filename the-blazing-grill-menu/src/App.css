@@ -8,15 +8,14 @@
   font-family: "IM Fell";
   background-position: center;
   background-size: cover;
-  display: grid;
-  overflow-x: scroll;
-  grid-template-rows: auto auto;
+  display: flex;
+  overflow: hidden;
+  /* grid-template-rows: auto auto; */
 }
 .Menu {
   width: 100%;
   height: auto;
-  display: grid;
-  grid-template-columns: 27% 63% 11%;
+  display: flex;
 }
 .Right {
   height: auto;
@@ -41,6 +40,7 @@ text {
   font-size: 40px;
   font-family: "IM Fell English", serif;
   /* text-transform: uppercase; */
+  cursor: pointer;
 }
 .SectionName {
   width: 100%;
@@ -107,8 +107,8 @@ Menu Page 2
 .Menu2 {
   width: 100%;
   height: auto;
-  display: grid;
-  grid-template-columns: auto auto auto;
+  display: flex;
+  /* grid-template-columns: auto auto auto; */
 }
 .Right2 {
   height: auto;
@@ -141,4 +141,21 @@ Menu Page 2
   display: grid;
   font-size: 10px;
   grid-template-columns: 60% 20% 20%;
+}
+
+.sideBar {
+  width: 100px;
+  height: 500px;
+  background-color: #f7941d;
+  /* overflow-y: scroll; */
+  overflow: auto;
+}
+.menuItemIcon {
+  width: 90%;
+  height: 70px;
+  border: 1px solid white;
+  margin: 35px auto;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
 }

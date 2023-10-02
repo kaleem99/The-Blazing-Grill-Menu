@@ -5,6 +5,7 @@ import Burger from "./assets/BurgersMenu.jpg";
 import pizza2 from "./assets/VegetarianPizza.jpg";
 import sanhaImage from "./assets/newSanhaLogo.png";
 import Draggable from "react-draggable";
+import { MdOutlineCancel } from "react-icons/md";
 
 import {
   collection,
@@ -13,493 +14,160 @@ import {
   updateDoc,
   doc,
   deleteDoc,
+  deleteField,
 } from "firebase/firestore";
-function MenuPage2({ state, setState }) {
-  const [chicken, setChicken] = useState([]);
-  const [burgers, setBurgers] = useState([]);
-  const [gourmetBurger, setGourmetBurger] = useState([]);
-  const [chickenBurgers, setChickenBurgers] = useState([]);
-  const [beefburgers, setBeefBurgers] = useState([]);
-  useEffect(() => {
-    if (state.length === 0) {
-      fetchPost();
-    }
-  }, []);
+function MenuPage2({ state, setState, menu, setMenu, fetchPost }) {
+  const PAGE = "menu2";
+  const [remove, setRemove] = useState(-1);
 
-  const fetchPost = async (name) => {
-    let newDataArr = [];
-    MenuItemsSection.map(async (data) => {
-      await getDocs(collection(db, data.name)).then((querySnapshot) => {
-        const newData = querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          // id: doc.id,
-        }));
-        newDataArr.push({ name: data.name, data: newData });
-
-        const grilledChicken = newDataArr.filter(
-          (category) => category.name === "Grilled Chicken"
-        );
-        const burgers = newDataArr.filter(
-          (category) => category.name === "Burgers"
-        );
-
-        if (burgers.length > 0) {
-          setChickenBurgers(
-            burgers[0].data.filter(
-              (item) => item.name.includes("Chicken") && item
-            )
-          );
-          setBeefBurgers(
-            burgers[0].data.filter(
-              (item) =>
-                (item.name.includes("Cheese") ||
-                  item.name.includes("Blazing") ||
-                  item.name.includes("Egg") ||
-                  item.name.includes("Jalapeno")) &&
-                !item.name.includes("Double") &&
-                item
-            )
-          );
-        }
-        const gourmetBurgers = newDataArr.filter(
-          (category) => category.name === "Gourmet Burgers"
-        );
-        if (grilledChicken.length > 0 && burgers.length > 0) {
-          let result = grilledChicken[0].data.filter(
-            (data) => !data.name.includes("Fries")
-          );
-          let result2 = burgers[0].data.filter(
-            (data) => !data.name.includes("Double")
-          );
-          let result3 = gourmetBurgers[0].data.filter(
-            (data) => !data.name.includes("Double")
-          );
-          setChicken(result);
-          setBurgers(result2);
-          setGourmetBurger(result3);
-        }
-        setState(newDataArr);
-      });
+  const updateMenu = async (data, index, e) => {
+    state[index].data.map((items, i) => {
+      const docRef = doc(db, data.name, items.id);
+      updateDoc(docRef, items);
+    });
+    await fetchPost();
+  };
+  // const fetchPost = async (name) => {
+  //   let newDataArr = [];
+  //   MenudataSection.map(async (data) => {
+  //     await getDocs(collection(db, data.name)).then((querySnapshot) => {
+  //       const newData = querySnapshot.docs.map((doc) => ({
+  //         ...doc.data(),
+  //         // id: doc.id,
+  //       }));
+  //       newDataArr.push({ name: data.name, data: newData });
+  //       setState(newDataArr);
+  //     });
+  //   });
+  // };
+  const mouseOver = (e, i) => {
+    console.log(i);
+    console.log(state[i]);
+    setRemove(i);
+    e.currentTarget.style.color = "red";
+  };
+  const setContent = (data, ui) => {
+    const xValue = ui.x;
+    const yValue = ui.y;
+    console.log(xValue, yValue);
+    data.data.forEach((items) => {
+      items.positionX = xValue.toString();
+      items.positionY = yValue.toString();
+      items.page = PAGE;
     });
   };
-  const formatNames = (name) => {
-    let result = name;
-    if (name.toLowerCase().includes("single")) {
-      result = name.replace(/\bSingle\b/g, "");
-    }
-    if (name.toLowerCase().includes("double")) {
-      result = name.replace(/\bDouble\b/g, "");
-    }
-    return result;
+  const removeItemFromPage = async (data, index) => {
+    data.data.forEach((items) => {
+      items.positionX = "None";
+      items.positionY = "None";
+      items.page = deleteField();
+    });
+    console.log(data);
+    state[index].data.map((items, i) => {
+      const docRef = doc(db, data.name, items.id);
+      updateDoc(docRef, items);
+    });
+    await fetchPost();
   };
-  return state.length > 1 ? (
-    <div className="Menu2">
-      <div className="Left2">
-        <div style={{ width: "98%", height: "96vh", margin: "1vh auto" }}>
-          <Draggable>
+  return state.length > 0 ? (
+    <div className="Menu">
+      {state.map((items, i) => {
+        let positionX = "";
+        let positionY = "";
+        if (items.data.length > 0 && items.data[0].positionX != undefined) {
+          positionX = items.data[0].positionX;
+          positionY = items.data[0].positionY;
+        }
+
+        return (
+          <Draggable
+            defaultPosition={{
+              x: parseInt(positionX),
+              y: parseInt(positionY),
+            }}
+            style={{ border: "10px solid black" }}
+            // onStop={(e, ui) => testing(e, ui)}
+            onStop={(e, ui) => setContent(items, ui)}
+          >
             <div
+              onDoubleClick={(e) => updateMenu(items, i, e)}
               style={{
-                width: "100%",
-                height: "18%",
-                border: "1px solid white",
-                marginBottom: "1vh",
-                position: "relative",
-                backgroundImage: `url(${Burger})`,
-                backgroundPosition: "center",
-                backgroundSize: "cover",
+                width: "30%",
+                height: "auto",
+                // backgroundColor: "red",
+                margin: "1vh auto",
+                // border: "1px solid",
               }}
             >
-              <img
-                style={{
-                  width: "20%",
-                  height: "55%",
-                  position: "relative",
-                  top: "1%",
-                  left: "40%",
-                  zIndex: 1,
-                }}
-                alt=""
-                className="BlazingImage"
-                src={sanhaImage}
-                draggable={false}
-              ></img>
-            </div>
-          </Draggable>
-          <Draggable>
-            <div>
-              <div className="SectionName">
-                <text>{state[0].name !== undefined && state[0].name}</text>
-              </div>
               <div
-                style={{
-                  width: "100%",
-                  height: "auto",
-                  border: "1px solid white",
-                  // borderBottom: "0px",
-                  //   marginTop: "4%",
+                onMouseOver={(e) => mouseOver(e, i)}
+                onMouseOut={(e) => {
+                  setRemove(-1);
+                  // e.currentTarget.style.color = "white";
                 }}
+                // onDoubleClick={() => console.log(100)}
+                className="SectionName"
+                style={{ marginTop: "1vh" }}
               >
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "auto",
-                    // gridGap: "10px",
-                  }}
-                >
-                  <div className="NameAndPriceBurgers">
-                    <p
-                      style={{ fontSize: "32px", color: "white" }}
-                      className="itemNames"
-                    >
-                      Chicken
-                    </p>
-                  </div>
-                  {chickenBurgers
-                    .sort((a, b) => {
-                      const nameA = a.name.toUpperCase();
-                      const nameB = b.name.toUpperCase();
-
-                      if (nameA < nameB) {
-                        return -1;
-                      }
-                      if (nameA > nameB) {
-                        return 1;
-                      }
-                      return 0;
-                    })
-                    .map((items, i) => {
-                      return (
-                        <div className="ItemsData">
-                          <div className="NameAndPriceBurgers">
-                            <div>
-                              {/* {i === 0 && <p className="">None</p>} */}
-                              <p className="itemNames">
-                                {formatNames(items.name)}
-                              </p>
-                            </div>
-                            <div>
-                              {i === 0 && !items.name.includes("Shredded") && (
-                                <p className="price">Single</p>
-                              )}
-
-                              <p className="price"> R{items.price}</p>
-                            </div>
-                            <div>
-                              {i === 0 && !items.name.includes("Shredded") && (
-                                <p className="price">Double</p>
-                              )}
-
-                              {items.name !== "Shredded Chicken Burger" &&
-                                items.name !==
-                                  "Shredded Prego Chicken Burger" && (
-                                  <p className="price">
-                                    R{(parseFloat(items.price) + 20).toFixed(2)}
-                                  </p>
-                                )}
-                            </div>
-                          </div>
-                          <div className="Information">
-                            {items.Information}{" "}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  <br></br>
-                  <div className="NameAndPriceBurgers">
-                    <p
-                      style={{ fontSize: "32px", color: "white" }}
-                      className="itemNames"
-                    >
-                      Beef
-                    </p>
-                  </div>
-                  {beefburgers
-                    .sort((a, b) => {
-                      const nameA = a.name.toUpperCase();
-                      const nameB = b.name.toUpperCase();
-
-                      if (nameA < nameB) {
-                        return -1;
-                      }
-                      if (nameA > nameB) {
-                        return 1;
-                      }
-                      return 0;
-                    })
-                    .map((items, i) => {
-                      return (
-                        <div className="ItemsData">
-                          <div className="NameAndPriceBurgers">
-                            <div>
-                              {/* {i === 0 && <p className="">None</p>} */}
-                              <p className="itemNames">
-                                {formatNames(items.name)}
-                              </p>
-                            </div>
-                            <div>
-                              {i === 0 && <p className="price">Single</p>}
-
-                              <p className="price"> R{items.price}</p>
-                            </div>
-                            <div>
-                              {i === 0 && <p className="price">Double</p>}
-
-                              {items.name !== "Shredded Chicken Burger" &&
-                                items.name !==
-                                  "Shredded Prego Chicken Burger" && (
-                                  <p className="price">
-                                    R{(parseFloat(items.price) + 20).toFixed(2)}
-                                  </p>
-                                )}
-                            </div>
-                          </div>
-                          <div className="Information">
-                            {items.Information}{" "}
-                          </div>
-                        </div>
-                      );
-                    })}
-                </div>
-              </div>
-            </div>
-          </Draggable>
-        </div>
-      </div>
-      <div className="Middle2">
-        <div style={{ width: "98%", height: "96vh", margin: "1vh auto" }}>
-          <Draggable>
-            <div>
-              <div className="SectionName">
-                <text>{state[2].name !== undefined && state[2].name}</text>
-              </div>
-              <div
-                style={{
-                  width: "100%",
-                  height: "auto",
-                  border: "1px solid white",
-                  marginBottom: "1vh",
-                }}
-              >
-                <div
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    // border: "1px solid white",
-                    // borderBottom: "0px",
-                    //   marginTop: "4%",
-                  }}
-                >
-                  <div
+                {remove >= 0 && i === remove && (
+                  <p
+                    onClick={() => removeItemFromPage(items, i)}
                     style={{
-                      display: "grid",
-                      gridTemplateColumns: "auto",
-                      //   gridGap: "10px",
+                      position: "absolute",
+                      fontSize: 30,
+                      margin: "10px auto",
+                      cursor: "pointer",
                     }}
                   >
-                    {chicken
-                      .sort((a, b) => a.price - b.price)
-                      .map((items, i) => {
-                        return (
-                          <div className="ItemsData">
-                            <div className="NameAndPriceChicken">
-                              <div>
-                                {i === 0 && (
-                                  <>
-                                    <p className="">Name</p>
-                                  </>
-                                )}
-                                <p className="itemNames">{items.name}</p>
-                              </div>
-                              <div>
-                                {i === 0 && (
-                                  <>
-                                    <p className="price">Chicken</p>
-                                  </>
-                                )}
-
-                                <p className="price"> R{items.price}</p>
-                              </div>
-                              <div>
-                                {i === 0 && (
-                                  <>
-                                    <p className="price">With Fries</p>
-                                  </>
-                                )}
-
-                                <p className="price">
-                                  R{(parseFloat(items.price) + 10).toFixed(2)}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
+                    <MdOutlineCancel />
+                  </p>
+                )}
+                <text>{items.name !== undefined && items.name}</text>
+              </div>
+              {items.data.map((data) => {
+                return (
+                  <div className="ItemsData">
+                    <div className="NameAndPrice">
+                      <p className="itemNames">{data.name}</p>
+                      <div>
+                        <p className="price"> R{data.price}</p>
+                      </div>
+                    </div>
+                    <div className="Information">{data.Information} </div>
                   </div>
-                </div>
-              </div>
+                );
+              })}
             </div>
           </Draggable>
-          <Draggable>
-            <div>
-              <div className="SectionName">
-                <text>{state[1].name !== undefined && state[1].name}</text>
-              </div>
-              <div
-                style={{
-                  width: "100%",
-                  height: "auto",
-                  border: "1px solid white",
-                  // borderBottom: "0px",
-                  //   marginTop: "4%",
-                }}
-              >
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "auto",
-                    gridGap: "10px",
-                  }}
-                >
-                  {gourmetBurger
-                    .sort((a, b) => a.price - b.price)
-                    .map((items, i) => {
-                      return (
-                        <div className="ItemsData">
-                          <div className="NameAndPriceBurgers">
-                            <div>
-                              {/* {i === 0 && <p className="">None</p>} */}
-                              <p className="itemNames">
-                                {formatNames(items.name)}
-                              </p>
-                            </div>
-                            <div>
-                              {i === 0 && <p className="price">Single</p>}
-
-                              <p className="price"> R{items.price}</p>
-                            </div>
-                            <div>
-                              {i === 0 && <p className="price">Double</p>}
-
-                              {items.name.includes("Single") && (
-                                <p className="price">
-                                  R{(parseFloat(items.price) + 30).toFixed(2)}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                          <div className="Information">{items.Information}</div>
-                        </div>
-                      );
-                    })}
-                </div>
-              </div>
-            </div>
-          </Draggable>
-        </div>
-      </div>
-      <div className="Right2">
+        );
+      })}
+      <Draggable
+        defaultPosition={{
+          x: 1226,
+          y: -1,
+        }}
+      >
         <div
           style={{
-            width: "98%",
-            height: "auto",
-            // backgroundColor: "red",
-            margin: "1vh auto",
-            // border: "1px solid",
+            position: "absolute",
+            // width: "100%",
+            // height: "30%",
+            // //   border: "1px solid white",
+            // // background: "red",
+            // margin: "auto",
           }}
         >
-          <Draggable>
-            <div
-              style={{
-                width: "100%",
-                height: "40%",
-                //   border: "1px solid white",
-                // background: "red",
-                margin: "auto",
-              }}
-            >
-              <img
-                draggable={false}
-                style={{ width: "60%" }}
-                alt=""
-                className="BlazingImage"
-                src="https://www.theblazinggrill.co.za/wp-content/uploads/2021/07/TBG_Final_TransWhite.png"
-              ></img>
-              <br></br>
-              <text>Menu</text>
-            </div>
-          </Draggable>
-          <Draggable>
-            <div>
-              {" "}
-              <div className="SectionName" style={{ marginTop: "1vh" }}>
-                <text>{state[3].name !== undefined && state[3].name}</text>
-              </div>
-              <div
-                style={{
-                  width: "100%",
-                  height: "auto",
-                  border: "1px solid white",
-                  // margin: "3% auto",
-                  // borderBottom: "0px",
-                }}
-              >
-                {state[3].data
-                  .sort((a, b) => a.price - b.price)
-                  .map((items) => {
-                    return (
-                      <>
-                        <div className="ItemsData">
-                          <div className="NameAndPrice">
-                            <p className="itemNames">{items.name}</p>
-                            <div>
-                              <p className="price">R{items.price}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="Information">{items.Information} </div>
-                      </>
-                    );
-                  })}
-              </div>
-            </div>
-          </Draggable>
-          <Draggable>
-            <div>
-              <div className="SectionName" style={{ marginTop: "1vh" }}>
-                <text>
-                  {state[4].name !== undefined &&
-                    state[4].name.includes("Chicken") &&
-                    "Wings"}
-                </text>
-              </div>
-              <div
-                style={{
-                  width: "100%",
-                  height: "auto",
-                  border: "1px solid white",
-                  // margin: "3% auto",
-                  // borderBottom: "0px",
-                }}
-              >
-                {state[4].data
-                  .sort((a, b) => a.price - b.price)
-                  .map((items) => {
-                    return (
-                      <div className="ItemsData">
-                        <div className="NameAndPrice">
-                          <p className="itemNames">{items.name}</p>
-                          <div>
-                            <p className="price">R{items.price}</p>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
-          </Draggable>
+          <img
+            style={{ height: "300px" }}
+            alt=""
+            className="BlazingImage"
+            draggable={false}
+            src="https://www.theblazinggrill.co.za/wp-content/uploads/2021/07/TBG_Final_TransWhite.png"
+          ></img>
+          <br></br>
+          <text>Menu</text>
         </div>
-      </div>
+      </Draggable>
     </div>
   ) : (
     <div></div>
