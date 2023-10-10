@@ -16,7 +16,7 @@ import {
   deleteDoc,
   deleteField,
 } from "firebase/firestore";
-function MenuPage2({ state, setState, menu, setMenu, fetchPost }) {
+function MenuPage2({ state, setState, menu, setMenu, fetchPost, edit }) {
   const PAGE = "menu2";
   const [remove, setRemove] = useState(-1);
 
@@ -88,17 +88,20 @@ function MenuPage2({ state, setState, menu, setMenu, fetchPost }) {
             style={{ border: "10px solid black" }}
             // onStop={(e, ui) => testing(e, ui)}
             onStop={(e, ui) => setContent(items, ui)}
+            disabled={edit === "edit" ? false : true}
           >
             <div
               onDoubleClick={(e) => updateMenu(items, i, e)}
               style={{
                 width: "30%",
-                height: "auto",
+                height: `${items.data.length * 6.5}%`,
                 // backgroundColor: "red",
                 margin: "1vh auto",
+                cursor: "pointer",
                 // border: "1px solid",
               }}
             >
+              {console.log(items)}
               <div
                 onMouseOver={(e) => mouseOver(e, i)}
                 onMouseOut={(e) => {

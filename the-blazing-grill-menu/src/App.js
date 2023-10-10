@@ -6,14 +6,22 @@ import { useState, useEffect } from "react";
 import Draggable from "react-draggable";
 import { db } from "./database/config";
 import MenuItemsSection from "./frontend/menuSections";
-
-import { doc, updateDoc, onSnapshot, collection } from "firebase/firestore";
+import { storage } from "./database/config";
+import {
+  doc,
+  updateDoc,
+  onSnapshot,
+  collection,
+  addDoc,
+} from "firebase/firestore";
+import { getDownloadURL, ref, listAll } from "firebase/storage";
 function App() {
   const [state, setState] = useState([]);
   const [menu, setMenu] = useState([]);
+  const [images, setImages] = useState([]);
+  const [pageImages, setPageImages] = useState([]);
   let MenuPage = window.location.href.split("?");
   const PAGE = MenuPage[1] == undefined ? "menu2" : MenuPage[1];
-  console.log(MenuPage[1]);
   let newDataArr = [];
   let menuDataArr = [];
   const fetchPost = async () => {
@@ -41,30 +49,69 @@ function App() {
               keys = Object.keys(newData[0]);
             }
             if (keys.length > 0 && !keys.includes("page")) {
-              console.log(true);
+              // console.log(true);
               menuDataArr.push({
                 name: data.name,
                 data: newData,
               });
             }
-            // if (!Object.keys(newData[0]).includes("page")) {
-
-            // }
-
-            // console.log(newData);
-            console.log(newData);
           }
           setState(newDataArr);
           setMenu(menuDataArr);
         }
       );
-
-      // Store the unsubscribe function to clean up the listener later
       data.unsubscribe = unsubscribe;
     });
   };
-
+  // const getImages = async (newData) => {
+  //   const reference = ref(storage, "/images");
+  //   listAll(reference)
+  //     .then((result) => {
+  //       const promises = result.items.map(async (item) => {
+  //         const url = await getDownloadURL(item);
+  //         return url;
+  //       });
+  //       return Promise.all(promises);
+  //     })
+  //     .then((urls) => {
+  //       // console.log(urls, "URLS");
+  //       const filteredURL = urls.filter((url) => {
+  //         return newData.some((image) => image.url !== url);
+  //       });
+  //       console.log(filteredURL, "Hello World");
+  //       console.log(newData);
+  //       setImages(filteredURL);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching images:", error);
+  //     });
+  // };
+  const fetchImage = async () => {
+    let data = {};
+    const unsubscribe = onSnapshot(
+      collection(db, "MenuImages"),
+      (querySnapshot) => {
+        const newData = querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          // positionX: doc.data().positionX ? doc.data().positionX : "None",
+          // positionY: doc.data().positionY ? doc.data().positionY : "None",
+          id: doc.id,
+        }));
+        console.log(newData);
+        setPageImages(
+          newData.filter((item) => item.page !== "None" && item.page === PAGE)
+        );
+        const result = newData.filter((item) => item.page === "None");
+        console.log(result);
+        setImages(result);
+        // getImages(newData);
+      }
+    );
+    data.unsubscribe = unsubscribe;
+  };
   useEffect(() => {
+    fetchImage();
+
     fetchPost();
     // Clean up the listeners when the component unmounts
     return () => {
@@ -79,7 +126,7 @@ function App() {
   const updateData = async (data, index) => {
     menu[index].data.map((items, i) => {
       const docRef = doc(db, data.name, items.id);
-      console.log(items);
+      // console.log(items);
       items.positionX = "0";
       items.positionY = "0";
       items.page = PAGE;
@@ -87,13 +134,25 @@ function App() {
     });
     await fetchPost();
   };
-
+  const updateImages = async (data, index) => {
+    const docRef = doc(db, "MenuImages", data.id);
+    const newDocument = {
+      url: data.url,
+      positionX: "0",
+      positionY: "0",
+      page: PAGE,
+      width: 200,
+      height: 100,
+    };
+    await updateDoc(docRef, newDocument);
+    await fetchImage();
+  };
   return (
     <div className="App">
       {MenuPage[2] === "edit" && (
         <Draggable>
           <div className="sideBar">
-            {console.log(menu)}
+            {/* {console.log(menu)} */}
 
             {menu.map((data, i) => (
               <div
@@ -106,6 +165,7 @@ function App() {
           </div>
         </Draggable>
       )}
+
       {PAGE === "menu1" ? (
         <Menu
           fetchPost={fetchPost}
@@ -113,6 +173,9 @@ function App() {
           setMenu={setMenu}
           state={state}
           setState={setState}
+          edit={MenuPage[2]}
+          images={pageImages}
+          fetchImage={fetchImage}
         />
       ) : (
         <MenuPage2
@@ -121,7 +184,30 @@ function App() {
           setMenu={setMenu}
           state={state}
           setState={setState}
+          edit={MenuPage[2]}
         />
+      )}
+      {MenuPage[2] === "edit" && (
+        <Draggable>
+          <div className="sideBar">
+            {/* {console.log(menu)} */}
+
+            {images.map((data, i) => (
+              <div
+                onDoubleClick={() => updateImages(data, i)}
+                className="menuItemIcon"
+              >
+                <img
+                  style={{ objectFit: "contain" }}
+                  width={"90%"}
+                  height={"90%"}
+                  alt=""
+                  src={data.url}
+                ></img>
+              </div>
+            ))}
+          </div>
+        </Draggable>
       )}
     </div>
   );

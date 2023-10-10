@@ -149,6 +149,7 @@ Menu Page 2
   background-color: #f7941d;
   /* overflow-y: scroll; */
   overflow: auto;
+  border-radius: 20px;
 }
 .menuItemIcon {
   width: 90%;
