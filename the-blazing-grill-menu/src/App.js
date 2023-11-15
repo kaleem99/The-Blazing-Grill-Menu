@@ -187,6 +187,8 @@ function App() {
           state={state}
           setState={setState}
           edit={MenuPage[2]}
+          images={pageImages}
+          fetchImage={fetchImage}
         />
       )}
       {MenuPage[2] === "edit" && (

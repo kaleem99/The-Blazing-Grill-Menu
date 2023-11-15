@@ -81,9 +81,12 @@ text {
 }
 .ItemsData {
   margin-bottom: 2%;
-  display: flex;
+  width: 100%;
 }
-
+.itemContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
 @media screen and (min-width: 1700px) {
   text {
     font-size: 50px;
@@ -151,6 +154,9 @@ Menu Page 2
   /* overflow-y: scroll; */
   overflow: auto;
   border-radius: 20px;
+}
+.sideBar:nth-child(1){
+  float: left;
 }
 .menuItemIcon {
   width: 90%;

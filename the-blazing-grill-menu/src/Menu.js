@@ -200,10 +200,15 @@ function Menu({
                   )}
                   <text>{items.name !== undefined && items.name}</text>
                 </div>
-                {items.data.map((data) => {
-                  return (
-                    <div className="ItemsData">
-                      <div className="itemContainer">
+                <div className="itemContainer">
+                  {items.data.map((data) => {
+                    return (
+                      <div
+                        className="ItemsData"
+                        style={{
+                          width: items.data[0].width > 650 ? "50%" : "100%",
+                        }}
+                      >
                         <div className="NameAndPrice">
                           <p className="itemNames">{data.name}</p>
                           <div>
@@ -212,9 +217,9 @@ function Menu({
                         </div>
                         <div className="Information">{data.Information} </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             </Resizable>
           </Draggable>
@@ -276,7 +281,10 @@ function Menu({
                 // });
                 console.log(body);
               }}
-              style={{ position: "absolute", border: "1px solid white" }}
+              style={{
+                position: "absolute",
+                border: edit === "edit" ? "1px solid white" : "",
+              }}
             >
               <div
                 onDoubleClick={(e) => updateImage(item, i, e)}
