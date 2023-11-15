@@ -34,6 +34,7 @@ function Menu({
   const updateMenu = async (data, index, e) => {
     state[index].data.map((items, i) => {
       const docRef = doc(db, data.name, items.id);
+      console.log(items);
       updateDoc(docRef, items);
     });
     await fetchPost();
@@ -111,8 +112,8 @@ function Menu({
     setBody({ height: size.height, width: size.width });
     // this.setState({ width: size.width, height: size.height });
   };
-
-  return state.length > 0 ? (
+  console.log(state, 10000);
+  return state.length > 0 || images.length > 0 ? (
     <div className="Menu">
       {state.map((items, i) => {
         let positionX = "";
@@ -132,57 +133,90 @@ function Menu({
             onStop={(e, ui) => setContent(items, ui)}
             disabled={edit === "edit" ? false : true}
           >
-            <div
-              onDoubleClick={(e) => updateMenu(items, i, e)}
+            <Resizable
+              size={{
+                width: items.data[0].width,
+                height: items.height,
+              }}
+              onResizeStop={(e, direction, ref, d) => {
+                const bodyArr = [...state];
+                const newItem = items;
+                newItem.data.forEach((data) => {
+                  data.width = data.width + d.width;
+                  data.height = data.height + d.height;
+                });
+                console.log(d.width, d.height);
+                console.log(newItem, "new Item");
+
+                bodyArr[i] = newItem;
+                setState(bodyArr);
+                // setBody({
+                //   width: body.width + d.width,
+                //   height: body.height + d.height,
+                // });
+                console.log(bodyArr, "bodyArr");
+              }}
               style={{
-                width: "30%",
-                height: `${items.data.length * 6.5}%`,
-                // backgroundColor: "red",
-                margin: "1vh auto",
-                // border: "1px solid",
-                cursor: "pointer",
+                position: "absolute",
+                border: edit === "edit" ? "1px solid white" : "",
               }}
             >
               <div
-                onMouseOver={(e) => mouseOver(e, i)}
-                onMouseOut={(e) => {
-                  setRemove(-1);
-                  // e.currentTarget.style.color = "white";
+                onDoubleClick={(e) => updateMenu(items, i, e)}
+                style={{
+                  // width: items.data[0].width,
+                  // flex: "0 0 calc(33.33% - 10px)",
+                  // maxWidth: "calc(33.33% - 10px)",
+                  height: `${items.data.length * 6.5}%`,
+                  // backgroundColor: "red",
+                  margin: "1vh auto",
+                  // border: "1px solid",
+                  cursor: "pointer",
                 }}
-                // MdOutlineCancel
-                // onDoubleClick={() => console.log(100)}
-                className="SectionName"
-                style={{ marginTop: "1vh" }}
               >
-                {remove >= 0 && i === remove && (
-                  <p
-                    onClick={() => removeItemFromPage(items, i)}
-                    style={{
-                      position: "absolute",
-                      fontSize: 30,
-                      margin: "10px auto",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <MdOutlineCancel />
-                  </p>
-                )}
-                <text>{items.name !== undefined && items.name}</text>
-              </div>
-              {items.data.map((data) => {
-                return (
-                  <div className="ItemsData">
-                    <div className="NameAndPrice">
-                      <p className="itemNames">{data.name}</p>
-                      <div>
-                        <p className="price"> R{data.price}</p>
+                <div
+                  onMouseOver={(e) => edit === "edit" && mouseOver(e, i)}
+                  onMouseOut={(e) => {
+                    setRemove(-1);
+                    // e.currentTarget.style.color = "white";
+                  }}
+                  // MdOutlineCancel
+                  // onDoubleClick={() => console.log(100)}
+                  className="SectionName"
+                  style={{ marginTop: "1vh" }}
+                >
+                  {remove >= 0 && i === remove && (
+                    <p
+                      onClick={() => removeItemFromPage(items, i)}
+                      style={{
+                        position: "absolute",
+                        fontSize: 30,
+                        margin: "10px auto",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <MdOutlineCancel />
+                    </p>
+                  )}
+                  <text>{items.name !== undefined && items.name}</text>
+                </div>
+                {items.data.map((data) => {
+                  return (
+                    <div className="ItemsData">
+                      <div className="itemContainer">
+                        <div className="NameAndPrice">
+                          <p className="itemNames">{data.name}</p>
+                          <div>
+                            <p className="price"> R{data.price}</p>
+                          </div>
+                        </div>
+                        <div className="Information">{data.Information} </div>
                       </div>
                     </div>
-                    <div className="Information">{data.Information} </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            </Resizable>
           </Draggable>
         );
       })}

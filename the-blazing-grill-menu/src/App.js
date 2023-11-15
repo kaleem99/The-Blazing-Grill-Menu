@@ -129,6 +129,8 @@ function App() {
       // console.log(items);
       items.positionX = "0";
       items.positionY = "0";
+      items.width = items.width == undefined ? 200 : items.width;
+      items.height = items.height == undefined ? 500 : items.height;
       items.page = PAGE;
       updateDoc(docRef, items);
     });

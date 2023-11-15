@@ -81,6 +81,7 @@ text {
 }
 .ItemsData {
   margin-bottom: 2%;
+  display: flex;
 }
 
 @media screen and (min-width: 1700px) {
