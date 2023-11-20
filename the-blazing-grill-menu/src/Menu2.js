@@ -26,7 +26,9 @@ function MenuPage2({
   images,
   fetchImage,
   reference,
-  zoom
+  zoom,
+  dragElement,
+  resizeElement,
 }) {
   const PAGE = "menu2";
   const [remove, setRemove] = useState(-1);
@@ -106,7 +108,7 @@ function MenuPage2({
     await fetchImage();
     // console.log(data, index);
   };
-  return state.length > 0 ? (
+  return state.length > 0 || images.length > 0 ? (
     <div
       className="Menu"
       ref={reference}
@@ -129,7 +131,7 @@ function MenuPage2({
             style={{ border: "10px solid black" }}
             // onStop={(e, ui) => testing(e, ui)}
             onStop={(e, ui) => setContent(items, ui)}
-            disabled={edit === "edit" ? false : true}
+            disabled={!dragElement ? true : false}
           >
             <Resizable
               size={{
@@ -153,6 +155,16 @@ function MenuPage2({
                 //   height: body.height + d.height,
                 // });
                 console.log(bodyArr, "bodyArr");
+              }}
+              enable={{
+                top: resizeElement,
+                right: resizeElement,
+                bottom: resizeElement,
+                left: resizeElement,
+                topRight: resizeElement,
+                bottomRight: resizeElement,
+                bottomLeft: resizeElement,
+                topLeft: resizeElement,
               }}
               style={{
                 position: "absolute",
@@ -233,7 +245,7 @@ function MenuPage2({
             // style={{ border: "10px solid black" }}
             // onStop={(e, ui) => testing(e, ui)}
             onStop={(e, ui) => setImage(item, ui)}
-            disabled={edit === "edit" ? false : true}
+            disabled={!dragElement ? true : false}
           >
             <Resizable
               size={{ width: item.width, height: item.height }}
@@ -249,6 +261,16 @@ function MenuPage2({
                 //   height: body.height + d.height,
                 // });
                 console.log(body);
+              }}
+              enable={{
+                top: resizeElement,
+                right: resizeElement,
+                bottom: resizeElement,
+                left: resizeElement,
+                topRight: resizeElement,
+                bottomRight: resizeElement,
+                bottomLeft: resizeElement,
+                topLeft: resizeElement,
               }}
               style={{
                 position: "absolute",

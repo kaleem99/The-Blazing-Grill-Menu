@@ -29,6 +29,8 @@ function Menu({
   fetchImage,
   reference,
   zoom,
+  dragElement,
+  resizeElement,
 }) {
   const PAGE = "menu1";
   const [body, setBody] = useState(images);
@@ -128,12 +130,22 @@ function Menu({
             style={{ border: "10px solid black" }}
             // onStop={(e, ui) => testing(e, ui)}
             onStop={(e, ui) => setContent(items, ui)}
-            disabled={edit === "edit" ? false : true}
+            disabled={!dragElement ? true : false}
           >
             <Resizable
               size={{
                 width: items.data[0].width,
                 height: items.height,
+              }}
+              enable={{
+                top: resizeElement,
+                right: resizeElement,
+                bottom: resizeElement,
+                left: resizeElement,
+                topRight: resizeElement,
+                bottomRight: resizeElement,
+                bottomLeft: resizeElement,
+                topLeft: resizeElement,
               }}
               onResizeStop={(e, direction, ref, d) => {
                 const bodyArr = [...state];
@@ -230,7 +242,7 @@ function Menu({
             // style={{ border: "10px solid black" }}
             // onStop={(e, ui) => testing(e, ui)}
             onStop={(e, ui) => setImage(item, ui)}
-            disabled={edit === "edit" ? false : true}
+            disabled={!dragElement ? true : false}
           >
             <Resizable
               size={{ width: item.width, height: item.height }}
@@ -245,6 +257,16 @@ function Menu({
                 //   width: body.width + d.width,
                 //   height: body.height + d.height,
                 // });
+              }}
+              enable={{
+                top: resizeElement,
+                right: resizeElement,
+                bottom: resizeElement,
+                left: resizeElement,
+                topRight: resizeElement,
+                bottomRight: resizeElement,
+                bottomLeft: resizeElement,
+                topLeft: resizeElement,
               }}
               style={{
                 position: "absolute",

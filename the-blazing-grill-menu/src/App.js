@@ -15,7 +15,11 @@ import {
   addDoc,
 } from "firebase/firestore";
 import { getDownloadURL, ref, listAll } from "firebase/storage";
-import { MdOutlineScreenshot } from "react-icons/md";
+import {
+  MdOutlineScreenshot,
+  MdBackHand,
+  MdFormatShapes,
+} from "react-icons/md";
 import html2pdf from "html2pdf.js";
 import html2canvas from "html2canvas";
 import * as htmlToImage from "html-to-image";
@@ -28,8 +32,10 @@ function App() {
   const [menu, setMenu] = useState([]);
   const [images, setImages] = useState([]);
   const [pageImages, setPageImages] = useState([]);
-  const [zoom, setZoom] = useState(1);
+  const [zoom, setZoom] = useState(0.8);
   const screenshotRef = useRef(null);
+  const [dragElement, setDragElement] = useState(false);
+  const [resizeElement, setResizeElement] = useState(false);
 
   let MenuPage = window.location.href.split("?");
   const PAGE = MenuPage[1] == undefined ? "menu2" : MenuPage[1];
@@ -37,53 +43,6 @@ function App() {
   let menuDataArr = [];
 
   const downloadAsPDF = async (index) => {
-    // const content = document.getElementsByClassName("Menu")[index];
-    // // content.style.backgroundColor = "black";
-    // if (content) {
-    //   const pdfOptions = {
-    //     margin: 10,
-    //     filename: "downloaded-document.pdf",
-    //     image: { type: "jpeg", quality: 0.98 },
-    //     html2canvas: { scale: 1 },
-    //     jsPDF: { unit: "mm", format: "a4", orientation: "landscape" },
-    //   };
-    //   console.log(content, 42);
-    //   html2pdf(content)
-    //     .from(content)
-    //     .set(pdfOptions)
-    //     .outputPdf()
-    //     .then((pdf) => {
-    //       console.log(pdf)
-    //       const blob = new Blob([pdf], { type: "application/pdf" });
-    //       const link = document.createElement("a");
-    //       link.href = window.URL.createObjectURL(blob);
-    //       link.download = pdfOptions.filename;
-    //       link.click();
-    //     });
-    // }
-    // setTimeout(async () => {
-    //   if (screenshotRef.current) {
-    //     try {
-    //       await html2canvas(screenshotRef.current, {
-    //         letterRendering: 1,
-    //         logging: true,
-    //         allowTaint: true,
-    //         useCORS: true,
-    //       }).then((canvas) => {
-    //         const imageData = canvas.toDataURL("image/png");
-
-    //         const link = document.createElement("a");
-    //         link.href = imageData;
-    //         link.download = "screenshot.png";
-    //         document.body.appendChild(link);
-    //         link.click();
-    //         document.body.removeChild(link);
-    //       });
-    //     } catch (error) {
-    //       console.error("Error capturing screenshot:", error);
-    //     }
-    //   }
-    // }, 1500);
     const options = {
       width: 1895, // A4 width in pixels
       height: 995, // A4 height in pixels
@@ -269,6 +228,8 @@ function App() {
           fetchImage={fetchImage}
           reference={screenshotRef}
           zoom={zoom}
+          dragElement={dragElement}
+          resizeElement={resizeElement}
         />
       ) : PAGE === "menu2" ? (
         <MenuPage2
@@ -282,6 +243,8 @@ function App() {
           fetchImage={fetchImage}
           reference={screenshotRef}
           zoom={zoom}
+          dragElement={dragElement}
+          resizeElement={resizeElement}
         />
       ) : (
         <MenuPage3
@@ -295,13 +258,33 @@ function App() {
           fetchImage={fetchImage}
           reference={screenshotRef}
           zoom={zoom}
+          dragElement={dragElement}
+          resizeElement={resizeElement}
         />
       )}
       {MenuPage[2] === "edit" && (
         <Draggable>
           <div className="sideBar">
-            {/* {console.log(menu)} */}
-
+            <button
+              style={dragElement ? { color: "orange" } : {}}
+              className="react-icon"
+              onClick={() => {
+                setDragElement(!dragElement);
+                setResizeElement(false);
+              }}
+            >
+              <MdBackHand />
+            </button>
+            <button
+              style={resizeElement ? { color: "orange" } : {}}
+              className="react-icon"
+              onClick={() => {
+                setResizeElement(!resizeElement);
+                setDragElement(false);
+              }}
+            >
+              <MdFormatShapes />
+            </button>
             {images.map((data, i) => (
               <div
                 onDoubleClick={() => updateImages(data, i)}

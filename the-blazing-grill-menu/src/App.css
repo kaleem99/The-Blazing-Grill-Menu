@@ -154,11 +154,11 @@ Menu Page 2
 
 .sideBar {
   width: 100px;
-  height: 500px;
+  height: 100vh;
   background-color: #f7941d;
   /* overflow-y: scroll; */
   overflow: auto;
-  border-radius: 20px;
+  /* border-radius: 20px; */
 }
 .sideBar:nth-child(1) {
   float: left;
