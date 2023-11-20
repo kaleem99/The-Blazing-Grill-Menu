@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { db, storage } from "./database/config";
 import MenuItemsSection from "./frontend/menuSections";
-import pizzas from "./assets/Pizzas.jpg";
+import Burger from "./assets/BurgersMenu.jpg";
 import pizza2 from "./assets/VegetarianPizza.jpg";
 import sanhaImage from "./assets/newSanhaLogo.png";
 import Draggable from "react-draggable";
 import { MdOutlineCancel } from "react-icons/md";
 import { Resizable } from "re-resizable";
-
 import {
   collection,
   addDoc,
@@ -15,10 +14,9 @@ import {
   updateDoc,
   doc,
   deleteDoc,
-  onSnapshot,
   deleteField,
 } from "firebase/firestore";
-function Menu({
+function MenuPage3({
   state,
   setState,
   menu,
@@ -28,11 +26,12 @@ function Menu({
   images,
   fetchImage,
   reference,
-  zoom,
+  zoom
 }) {
-  const PAGE = "menu1";
-  const [body, setBody] = useState(images);
+  const PAGE = "menu3";
   const [remove, setRemove] = useState(-1);
+  const [body, setBody] = useState(images);
+
   const updateMenu = async (data, index, e) => {
     state[index].data.map((items, i) => {
       const docRef = doc(db, data.name, items.id);
@@ -42,12 +41,9 @@ function Menu({
   };
   const updateImage = async (item, index, e) => {
     // const item = images[index];
+    console.log(item);
     const docRef = doc(db, "MenuImages", item.id);
     updateDoc(docRef, item);
-  };
-  const mouseOver = (e, i) => {
-    setRemove(i);
-    e.currentTarget.style.color = "red";
   };
   // const fetchPost = async (name) => {
   //   let newDataArr = [];
@@ -62,10 +58,16 @@ function Menu({
   //     });
   //   });
   // };
-
+  const mouseOver = (e, i) => {
+    console.log(i);
+    console.log(state[i]);
+    setRemove(i);
+    e.currentTarget.style.color = "red";
+  };
   const setContent = (data, ui) => {
     const xValue = ui.x;
     const yValue = ui.y;
+    console.log(xValue, yValue);
     data.data.forEach((items) => {
       items.positionX = xValue.toString();
       items.positionY = yValue.toString();
@@ -75,6 +77,7 @@ function Menu({
   const setImage = (item, ui) => {
     const xValue = ui.x;
     const yValue = ui.y;
+    // console.log(xValue, yValue);
     // data.data.forEach((items) => {
     item.positionX = xValue.toString();
     item.positionY = yValue.toString();
@@ -87,9 +90,9 @@ function Menu({
       items.positionY = "None";
       items.page = deleteField();
     });
+    console.log(data);
     state[index].data.map((items, i) => {
       const docRef = doc(db, data.name, items.id);
-
       updateDoc(docRef, items);
     });
     await fetchPost();
@@ -101,12 +104,9 @@ function Menu({
     data.page = "None";
     updateDoc(docRef, data);
     await fetchImage();
+    // console.log(data, index);
   };
-  const onResize = (event, { node, size, handle }) => {
-    setBody({ height: size.height, width: size.width });
-    // this.setState({ width: size.width, height: size.height });
-  };
-  return state.length > 0 || images.length > 0 ? (
+  return state.length > 0 ? (
     <div
       className="Menu"
       ref={reference}
@@ -119,6 +119,7 @@ function Menu({
           positionX = items.data[0].positionX;
           positionY = items.data[0].positionY;
         }
+
         return (
           <Draggable
             defaultPosition={{
@@ -142,6 +143,8 @@ function Menu({
                   data.width = data.width + d.width;
                   data.height = data.height + d.height;
                 });
+                console.log(d.width, d.height);
+                console.log(newItem, "new Item");
 
                 bodyArr[i] = newItem;
                 setState(bodyArr);
@@ -149,6 +152,7 @@ function Menu({
                 //   width: body.width + d.width,
                 //   height: body.height + d.height,
                 // });
+                console.log(bodyArr, "bodyArr");
               }}
               style={{
                 position: "absolute",
@@ -158,23 +162,21 @@ function Menu({
               <div
                 onDoubleClick={(e) => updateMenu(items, i, e)}
                 style={{
-                  // width: items.data[0].width,
-                  // flex: "0 0 calc(33.33% - 10px)",
-                  // maxWidth: "calc(33.33% - 10px)",
+                  // width: "30%",
                   height: `${items.data.length * 6.5}%`,
                   // backgroundColor: "red",
                   margin: "1vh auto",
-                  // border: "1px solid",
                   cursor: "pointer",
+                  // border: "1px solid",
                 }}
               >
+                {console.log(items)}
                 <div
-                  onMouseOver={(e) => edit === "edit" && mouseOver(e, i)}
+                  onMouseOver={(e) => mouseOver(e, i)}
                   onMouseOut={(e) => {
                     setRemove(-1);
                     // e.currentTarget.style.color = "white";
                   }}
-                  // MdOutlineCancel
                   // onDoubleClick={() => console.log(100)}
                   className="SectionName"
                   style={{ marginTop: "-1vh" }}
@@ -219,8 +221,9 @@ function Menu({
           </Draggable>
         );
       })}
-
       {images.map((item, i) => {
+        console.log(item);
+
         return (
           <Draggable
             defaultPosition={{
@@ -245,6 +248,7 @@ function Menu({
                 //   width: body.width + d.width,
                 //   height: body.height + d.height,
                 // });
+                console.log(body);
               }}
               style={{
                 position: "absolute",
@@ -295,33 +299,10 @@ function Menu({
           </Draggable>
         );
       })}
-      {/* <Resizable
-        size={{ width: body.width, height: body.height }}
-        // onResizeStop={(e, direction, ref, d) => {
-        //   setBody({
-        //     width: body.width + d.width,
-        //     height: body.height + d.height,
-        //   });
-        // }}
-        style={{ position: "absolute", border: "1px solid white" }}
-        // draggableOpts={{ enableUserSelectHack: false }}
-      >
-        <div
-          style={{
-            width: `${body.width}px`,
-            height: `${body.height}px`,
-            // border: "1px solid #ccc",
-            // padding: "10px",
-            // position: "absolute",
-          }}
-        >
-          Resizable Div
-        </div>
-      </Resizable> */}
     </div>
   ) : (
     <div></div>
   );
 }
 
-export default Menu;
+export default MenuPage3;

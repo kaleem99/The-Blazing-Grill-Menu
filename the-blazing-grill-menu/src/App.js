@@ -2,7 +2,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import Menu from "./Menu";
 import MenuPage2 from "./Menu2";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Draggable from "react-draggable";
 import { db } from "./database/config";
 import MenuItemsSection from "./frontend/menuSections";
@@ -15,15 +15,96 @@ import {
   addDoc,
 } from "firebase/firestore";
 import { getDownloadURL, ref, listAll } from "firebase/storage";
+import { MdOutlineScreenshot } from "react-icons/md";
+import html2pdf from "html2pdf.js";
+import html2canvas from "html2canvas";
+import * as htmlToImage from "html-to-image";
+
+import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
+
+import MenuPage3 from "./Menu3";
 function App() {
   const [state, setState] = useState([]);
   const [menu, setMenu] = useState([]);
   const [images, setImages] = useState([]);
   const [pageImages, setPageImages] = useState([]);
+  const [zoom, setZoom] = useState(1);
+  const screenshotRef = useRef(null);
+
   let MenuPage = window.location.href.split("?");
   const PAGE = MenuPage[1] == undefined ? "menu2" : MenuPage[1];
   let newDataArr = [];
   let menuDataArr = [];
+
+  const downloadAsPDF = async (index) => {
+    // const content = document.getElementsByClassName("Menu")[index];
+    // // content.style.backgroundColor = "black";
+    // if (content) {
+    //   const pdfOptions = {
+    //     margin: 10,
+    //     filename: "downloaded-document.pdf",
+    //     image: { type: "jpeg", quality: 0.98 },
+    //     html2canvas: { scale: 1 },
+    //     jsPDF: { unit: "mm", format: "a4", orientation: "landscape" },
+    //   };
+    //   console.log(content, 42);
+    //   html2pdf(content)
+    //     .from(content)
+    //     .set(pdfOptions)
+    //     .outputPdf()
+    //     .then((pdf) => {
+    //       console.log(pdf)
+    //       const blob = new Blob([pdf], { type: "application/pdf" });
+    //       const link = document.createElement("a");
+    //       link.href = window.URL.createObjectURL(blob);
+    //       link.download = pdfOptions.filename;
+    //       link.click();
+    //     });
+    // }
+    // setTimeout(async () => {
+    //   if (screenshotRef.current) {
+    //     try {
+    //       await html2canvas(screenshotRef.current, {
+    //         letterRendering: 1,
+    //         logging: true,
+    //         allowTaint: true,
+    //         useCORS: true,
+    //       }).then((canvas) => {
+    //         const imageData = canvas.toDataURL("image/png");
+
+    //         const link = document.createElement("a");
+    //         link.href = imageData;
+    //         link.download = "screenshot.png";
+    //         document.body.appendChild(link);
+    //         link.click();
+    //         document.body.removeChild(link);
+    //       });
+    //     } catch (error) {
+    //       console.error("Error capturing screenshot:", error);
+    //     }
+    //   }
+    // }, 1500);
+    const options = {
+      width: 1895, // A4 width in pixels
+      height: 995, // A4 height in pixels
+    };
+
+    htmlToImage
+      .toPng(screenshotRef.current, options)
+      .then(function (dataUrl) {
+        // var img = new Image();
+        // img.src = dataUrl;
+        // document.body.appendChild(img);
+        console.log(dataUrl, "Data URL");
+        const link = document.createElement("a");
+        link.download = "theblazinggrillmenu.png";
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch(function (error) {
+        console.error("oops, something went wrong!", error);
+      });
+  };
   const fetchPost = async () => {
     MenuItemsSection.map((data) => {
       const unsubscribe = onSnapshot(
@@ -155,7 +236,15 @@ function App() {
         <Draggable>
           <div className="sideBar">
             {/* {console.log(menu)} */}
-
+            <button className="react-icon" onClick={() => downloadAsPDF(0)}>
+              <MdOutlineScreenshot />
+            </button>
+            <button className="react-icon" onClick={() => setZoom(zoom + 0.1)}>
+              +
+            </button>
+            <button className="react-icon" onClick={() => setZoom(zoom - 0.1)}>
+              -
+            </button>
             {menu.map((data, i) => (
               <div
                 onDoubleClick={() => updateData(data, i)}
@@ -178,8 +267,10 @@ function App() {
           edit={MenuPage[2]}
           images={pageImages}
           fetchImage={fetchImage}
+          reference={screenshotRef}
+          zoom={zoom}
         />
-      ) : (
+      ) : PAGE === "menu2" ? (
         <MenuPage2
           fetchPost={fetchPost}
           menu={menu}
@@ -189,6 +280,21 @@ function App() {
           edit={MenuPage[2]}
           images={pageImages}
           fetchImage={fetchImage}
+          reference={screenshotRef}
+          zoom={zoom}
+        />
+      ) : (
+        <MenuPage3
+          fetchPost={fetchPost}
+          menu={menu}
+          setMenu={setMenu}
+          state={state}
+          setState={setState}
+          edit={MenuPage[2]}
+          images={pageImages}
+          fetchImage={fetchImage}
+          reference={screenshotRef}
+          zoom={zoom}
         />
       )}
       {MenuPage[2] === "edit" && (

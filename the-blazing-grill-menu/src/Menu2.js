@@ -25,6 +25,8 @@ function MenuPage2({
   edit,
   images,
   fetchImage,
+  reference,
+  zoom
 }) {
   const PAGE = "menu2";
   const [remove, setRemove] = useState(-1);
@@ -105,7 +107,11 @@ function MenuPage2({
     // console.log(data, index);
   };
   return state.length > 0 ? (
-    <div className="Menu">
+    <div
+      className="Menu"
+      ref={reference}
+      style={edit === "edit" ? { zoom: zoom, border: "3px solid white" } : {}}
+    >
       {state.map((items, i) => {
         let positionX = "";
         let positionY = "";
@@ -173,7 +179,7 @@ function MenuPage2({
                   }}
                   // onDoubleClick={() => console.log(100)}
                   className="SectionName"
-                  style={{ marginTop: "1vh" }}
+                  style={{ marginTop: "-1vh" }}
                 >
                   {remove >= 0 && i === remove && (
                     <p

@@ -16,6 +16,11 @@
   width: 100%;
   height: auto;
   display: flex;
+  /* transform: scale(0.8); */
+  background-image: url("./assets/smokeyBackground1024_1.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 .Right {
   height: auto;
@@ -155,9 +160,10 @@ Menu Page 2
   overflow: auto;
   border-radius: 20px;
 }
-.sideBar:nth-child(1){
+.sideBar:nth-child(1) {
   float: left;
 }
+
 .menuItemIcon {
   width: 90%;
   height: 70px;
@@ -165,5 +171,17 @@ Menu Page 2
   margin: 35px auto;
   border-radius: 5px;
   color: white;
+  cursor: pointer;
+}
+.react-icon {
+  font-size: 40px;
+  width: 90%;
+  height: 70px;
+  border: 1px solid white;
+  margin: 35px auto;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
 }
