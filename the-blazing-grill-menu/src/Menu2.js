@@ -172,7 +172,7 @@ function MenuPage2({
               }}
             >
               <div
-                onDoubleClick={(e) => updateMenu(items, i, e)}
+                // onDoubleClick={(e) => updateMenu(items, i, e)}
                 style={{
                   // width: "30%",
                   height: `${items.data.length * 6.5}%`,
@@ -278,7 +278,7 @@ function MenuPage2({
               }}
             >
               <div
-                onDoubleClick={(e) => updateImage(item, i, e)}
+                // onDoubleClick={(e) => updateImage(item, i, e)}
                 onMouseOver={(e) => mouseOver(e, i)}
                 onMouseOut={(e) => {
                   setRemove(-1);

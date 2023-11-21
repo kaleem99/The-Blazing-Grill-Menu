@@ -38,6 +38,7 @@ function Menu({
   const updateMenu = async (data, index, e) => {
     state[index].data.map((items, i) => {
       const docRef = doc(db, data.name, items.id);
+      console.log(items, "ITEMS", data, items);
       updateDoc(docRef, items);
     });
     await fetchPost();
@@ -168,7 +169,7 @@ function Menu({
               }}
             >
               <div
-                onDoubleClick={(e) => updateMenu(items, i, e)}
+                // onDoubleClick={(e) => updateMenu(items, i, e)}
                 style={{
                   // width: items.data[0].width,
                   // flex: "0 0 calc(33.33% - 10px)",
@@ -274,7 +275,7 @@ function Menu({
               }}
             >
               <div
-                onDoubleClick={(e) => updateImage(item, i, e)}
+                // onDoubleClick={(e) => updateImage(item, i, e)}
                 onMouseOver={(e) => mouseOver(e, i)}
                 onMouseOut={(e) => {
                   setRemove(-1);

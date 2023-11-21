@@ -20,11 +20,11 @@ import {
   MdBackHand,
   MdFormatShapes,
 } from "react-icons/md";
-import html2pdf from "html2pdf.js";
-import html2canvas from "html2canvas";
+import { IoMdSave } from "react-icons/io";
+
 import * as htmlToImage from "html-to-image";
 
-import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
+// import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
 
 import MenuPage3 from "./Menu3";
 function App() {
@@ -45,7 +45,7 @@ function App() {
   const downloadAsPDF = async (index) => {
     const options = {
       width: 1895, // A4 width in pixels
-      height: 995, // A4 height in pixels
+      height: 1000, // A4 height in pixels
     };
 
     htmlToImage
@@ -137,12 +137,10 @@ function App() {
           // positionY: doc.data().positionY ? doc.data().positionY : "None",
           id: doc.id,
         }));
-        console.log(newData);
         setPageImages(
           newData.filter((item) => item.page !== "None" && item.page === PAGE)
         );
         const result = newData.filter((item) => item.page === "None");
-        console.log(result);
         setImages(result);
         // getImages(newData);
       }
@@ -189,19 +187,52 @@ function App() {
     await updateDoc(docRef, newDocument);
     await fetchImage();
   };
+  const updateMenuItemsAndData = () => {
+    try {
+      for (let i = 0; i < state.length; i++) {
+        console.log(state[i], "Menu");
+        state[i].data.forEach((data) => {
+          const docRef = doc(db, data.category, data.id);
+          console.log(docRef, data);
+          updateDoc(docRef, data);
+        });
+      }
+      for (let i = 0; i < pageImages.length; i++) {
+        const docRef = doc(db, "MenuImages", pageImages[i].id);
+        updateDoc(docRef, pageImages[i]);
+      }
+      alert("Menu items have been updated successfully");
+    } catch (err) {
+      alert(err, "Please try again later");
+    }
+    setDragElement(false);
+    setResizeElement(false);
+  };
   return (
     <div className="App">
       {MenuPage[2] === "edit" && (
         <Draggable>
           <div className="sideBar">
             {/* {console.log(menu)} */}
+            <button
+              className="react-icon"
+              onClick={() => updateMenuItemsAndData()}
+            >
+              <IoMdSave />
+            </button>
             <button className="react-icon" onClick={() => downloadAsPDF(0)}>
               <MdOutlineScreenshot />
             </button>
-            <button className="react-icon" onClick={() => setZoom(zoom + 0.1)}>
+            <button
+              className="react-icon"
+              onClick={() => zoom <= 0.9 && setZoom(zoom + 0.1)}
+            >
               +
             </button>
-            <button className="react-icon" onClick={() => setZoom(zoom - 0.1)}>
+            <button
+              className="react-icon"
+              onClick={() => zoom > 0.1 && setZoom(zoom - 0.1)}
+            >
               -
             </button>
             {menu.map((data, i) => (
@@ -265,6 +296,9 @@ function App() {
       {MenuPage[2] === "edit" && (
         <Draggable>
           <div className="sideBar">
+            <button style={{ fontSize: "large" }} className="react-icon">
+              {(zoom * 100).toFixed(0)}%
+            </button>
             <button
               style={dragElement ? { color: "orange" } : {}}
               className="react-icon"
