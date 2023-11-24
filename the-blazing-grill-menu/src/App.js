@@ -187,19 +187,17 @@ function App() {
     await updateDoc(docRef, newDocument);
     await fetchImage();
   };
-  const updateMenuItemsAndData = () => {
+  const updateMenuItemsAndData = async () => {
     try {
       for (let i = 0; i < state.length; i++) {
-        console.log(state[i], "Menu");
-        state[i].data.forEach((data) => {
+        state[i].data.forEach(async (data) => {
           const docRef = doc(db, data.category, data.id);
-          console.log(docRef, data);
-          updateDoc(docRef, data);
+          await updateDoc(docRef, data);
         });
       }
       for (let i = 0; i < pageImages.length; i++) {
         const docRef = doc(db, "MenuImages", pageImages[i].id);
-        updateDoc(docRef, pageImages[i]);
+        await updateDoc(docRef, pageImages[i]);
       }
       alert("Menu items have been updated successfully");
     } catch (err) {
