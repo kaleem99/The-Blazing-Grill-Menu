@@ -45,11 +45,16 @@ function App() {
   const downloadAsPDF = async (index) => {
     const options = {
       width: 1895, // A4 width in pixels
-      height: 1000, // A4 height in pixels
+      // height: 1000, // A4 height in pixels
     };
+    const node = screenshotRef.current;
 
+    // Set the width and height of the container to ensure 100% coverage
+    // node.style.width = '100vw';
+    // node.style.height = '100vh';
+    
     htmlToImage
-      .toPng(screenshotRef.current, options)
+      .toPng(node, options)
       .then(function (dataUrl) {
         // var img = new Image();
         // img.src = dataUrl;
