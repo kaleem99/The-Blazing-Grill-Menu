@@ -33,6 +33,7 @@ function App() {
   const [images, setImages] = useState([]);
   const [pageImages, setPageImages] = useState([]);
   const [zoom, setZoom] = useState(0.8);
+  const [menuPages, setMenuPages] = useState([]);
   const screenshotRef = useRef(null);
   const [dragElement, setDragElement] = useState(false);
   const [resizeElement, setResizeElement] = useState(false);
@@ -52,7 +53,7 @@ function App() {
     // Set the width and height of the container to ensure 100% coverage
     // node.style.width = '100vw';
     // node.style.height = '100vh';
-    
+
     htmlToImage
       .toPng(node, options)
       .then(function (dataUrl) {
@@ -154,7 +155,18 @@ function App() {
   };
   useEffect(() => {
     fetchImage();
-
+    const unsubscribe = onSnapshot(
+      collection(db, "MenuPages"),
+      (querySnapshot) => {
+        const newData = querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))[0];
+        console.log(newData, "NEW");
+        setMenuPages(newData);
+        setZoom(parseInt(newData[PAGE]) / 100);
+      }
+    );
     fetchPost();
     // Clean up the listeners when the component unmounts
     return () => {
@@ -204,6 +216,12 @@ function App() {
         const docRef = doc(db, "MenuImages", pageImages[i].id);
         await updateDoc(docRef, pageImages[i]);
       }
+      let MenueDocRef = doc(db, "MenuPages", menuPages.id);
+      const newMenuPage = {
+        ...menuPages,
+        [PAGE]: parseInt(zoom * 100).toString(),
+      };
+      await updateDoc(MenueDocRef, newMenuPage);
       alert("Menu items have been updated successfully");
     } catch (err) {
       alert(err, "Please try again later");

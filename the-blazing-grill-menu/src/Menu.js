@@ -113,7 +113,11 @@ function Menu({
     <div
       className="Menu"
       ref={reference}
-      style={edit === "edit" ? { zoom: zoom, border: "3px solid white" } : {}}
+      style={
+        edit === "edit"
+          ? { zoom: zoom, border: "3px solid white" }
+          : { zoom: zoom }
+      }
     >
       {state.map((items, i) => {
         let positionX = "";
