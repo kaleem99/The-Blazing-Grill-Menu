@@ -169,7 +169,7 @@ function Menu({
               }}
               style={{
                 position: "absolute",
-                border: edit === "edit" ? "1px solid white" : "",
+                border: "2px double white",
               }}
             >
               <div
@@ -194,7 +194,7 @@ function Menu({
                   // MdOutlineCancel
                   // onDoubleClick={() => console.log(100)}
                   className="SectionName"
-                  style={{ marginTop: "-1vh" }}
+                  style={{ marginTop: "-1vh", height: "60px" }}
                 >
                   {remove >= 0 && i === remove && (
                     <p
@@ -275,7 +275,7 @@ function Menu({
               }}
               style={{
                 position: "absolute",
-                border: edit === "edit" ? "1px solid white" : "",
+                border: "2px double white",
               }}
             >
               <div

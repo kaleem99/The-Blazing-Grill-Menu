@@ -112,7 +112,11 @@ function MenuPage2({
     <div
       className="Menu"
       ref={reference}
-      style={edit === "edit" ? { zoom: zoom, border: "3px solid white" } : {}}
+      style={
+        edit === "edit"
+          ? { zoom: zoom, border: "3px solid white" }
+          : { zoom: zoom }
+      }
     >
       {state.map((items, i) => {
         let positionX = "";
@@ -168,7 +172,7 @@ function MenuPage2({
               }}
               style={{
                 position: "absolute",
-                border: edit === "edit" ? "1px solid white" : "",
+                border: "2px double white",
               }}
             >
               <div
@@ -182,7 +186,6 @@ function MenuPage2({
                   // border: "1px solid",
                 }}
               >
-                {console.log(items)}
                 <div
                   onMouseOver={(e) => mouseOver(e, i)}
                   onMouseOut={(e) => {
@@ -191,7 +194,7 @@ function MenuPage2({
                   }}
                   // onDoubleClick={() => console.log(100)}
                   className="SectionName"
-                  style={{ marginTop: "-1vh" }}
+                  style={{ marginTop: "-1vh", height: "60px" }}
                 >
                   {remove >= 0 && i === remove && (
                     <p
@@ -274,7 +277,7 @@ function MenuPage2({
               }}
               style={{
                 position: "absolute",
-                border: edit === "edit" ? "1px solid white" : "",
+                border: "2px double white",
               }}
             >
               <div
