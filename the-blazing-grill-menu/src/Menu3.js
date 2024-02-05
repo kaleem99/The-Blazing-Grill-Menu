@@ -29,6 +29,9 @@ function MenuPage3({
   zoom,
   dragElement,
   resizeElement,
+  allItems,
+  id,
+  storeState,
 }) {
   const PAGE = "menu3";
   const [remove, setRemove] = useState(-1);
@@ -69,12 +72,12 @@ function MenuPage3({
   const setContent = (data, ui) => {
     const xValue = ui.x;
     const yValue = ui.y;
-    console.log(xValue, yValue);
-    data.data.forEach((items) => {
-      items.positionX = xValue.toString();
-      items.positionY = yValue.toString();
-      items.page = PAGE;
-    });
+    console.log(xValue, yValue, data);
+    // data..forEach((items) => {
+    data.positionX = xValue.toString();
+    data.positionY = yValue.toString();
+    data.page = PAGE;
+    // });
   };
   const setImage = (item, ui) => {
     const xValue = ui.x;
@@ -84,44 +87,54 @@ function MenuPage3({
     item.positionX = xValue.toString();
     item.positionY = yValue.toString();
     item.page = PAGE;
+    console.log(item, 88);
     // });
   };
   const removeItemFromPage = async (data, index) => {
-    data.data.forEach((items) => {
-      items.positionX = "None";
-      items.positionY = "None";
-      items.page = deleteField();
-    });
-    console.log(data);
-    state[index].data.map((items, i) => {
-      const docRef = doc(db, data.name, items.id);
-      updateDoc(docRef, items);
-    });
+    data.positionX = "None";
+    data.positionY = "None";
+    data.page = "None";
+    // state[index].data.map((items, i) => {
+    const docRef = doc(db, "BlazingStores", id);
+    const result = {};
+    storeState.menuImages[index] = data;
+    result[storeState.store] = storeState;
+    localStorage.setItem("storeData", JSON.stringify(storeState));
+
+    updateDoc(docRef, result);
     await fetchPost();
   };
   const removeImageFromPage = async (data, index) => {
     data.positionX = "None";
     data.positionY = "None";
-    const docRef = doc(db, "MenuImages", data.id);
+    const docRef = doc(db, "BlazingStores", id);
     data.page = "None";
-    updateDoc(docRef, data);
+    // setStoreState(storeState);
+    const result = {};
+    storeState.menuImages[index] = data;
+    result[storeState.store] = storeState;
+    localStorage.setItem("storeData", JSON.stringify(storeState));
+
+    updateDoc(docRef, result);
     await fetchImage();
-    // console.log(data, index);
   };
   return state.length > 0 || images.length > 0 ? (
     <div
       className="Menu"
       ref={reference}
-      style={edit === "edit" ? { zoom: zoom, border: "3px solid white" } : {}}
+      style={
+        edit === "edit"
+          ? { zoom: zoom, border: "3px solid white" }
+          : { zoom: zoom }
+      }
     >
       {state.map((items, i) => {
         let positionX = "";
         let positionY = "";
-        if (items.data.length > 0 && items.data[0].positionX != undefined) {
-          positionX = items.data[0].positionX;
-          positionY = items.data[0].positionY;
+        if (items.positionX != undefined) {
+          positionX = items.positionX;
+          positionY = items.positionY;
         }
-
         return (
           <Draggable
             defaultPosition={{
@@ -135,18 +148,16 @@ function MenuPage3({
           >
             <Resizable
               size={{
-                width: items.data[0].width,
-                height: items.height,
+                width: items.width,
+                // height: items.height,
               }}
               onResizeStop={(e, direction, ref, d) => {
                 const bodyArr = [...state];
                 const newItem = items;
-                newItem.data.forEach((data) => {
-                  data.width = data.width + d.width;
-                  data.height = data.height + d.height;
-                });
-                console.log(d.width, d.height);
-                console.log(newItem, "new Item");
+                // newItem.forEach((data) => {
+                newItem.width = newItem.width + d.width;
+                newItem.height = newItem.height + d.height;
+                // });
 
                 bodyArr[i] = newItem;
                 setState(bodyArr);
@@ -154,7 +165,6 @@ function MenuPage3({
                 //   width: body.width + d.width,
                 //   height: body.height + d.height,
                 // });
-                console.log(bodyArr, "bodyArr");
               }}
               enable={{
                 top: resizeElement,
@@ -168,21 +178,21 @@ function MenuPage3({
               }}
               style={{
                 position: "absolute",
-                border: edit === "edit" ? "1px solid white" : "",
+                border: edit === "edit" ? "2px solid white" : "",
+                // border: "2px double white",
               }}
             >
               <div
                 // onDoubleClick={(e) => updateMenu(items, i, e)}
                 style={{
                   // width: "30%",
-                  height: `${items.data.length * 6.5}%`,
+                  height: `${items.length * 6.5}%`,
                   // backgroundColor: "red",
                   margin: "1vh auto",
                   cursor: "pointer",
                   // border: "1px solid",
                 }}
               >
-                {console.log(items)}
                 <div
                   onMouseOver={(e) => mouseOver(e, i)}
                   onMouseOut={(e) => {
@@ -193,7 +203,7 @@ function MenuPage3({
                   className="SectionName"
                   style={{ marginTop: "-1vh" }}
                 >
-                  {remove >= 0 && i === remove && (
+                  {edit === "edit" && remove >= 0 && i === remove && (
                     <p
                       onClick={() => removeItemFromPage(items, i)}
                       style={{
@@ -209,24 +219,26 @@ function MenuPage3({
                   <text>{items.name !== undefined && items.name}</text>
                 </div>
                 <div className="itemContainer">
-                  {items.data.map((data) => {
-                    return (
-                      <div
-                        className="ItemsData"
-                        style={{
-                          width: items.data[0].width > 650 ? "50%" : "100%",
-                        }}
-                      >
-                        <div className="NameAndPrice">
-                          <p className="itemNames">{data.name}</p>
-                          <div>
-                            <p className="price"> R{data.price}</p>
+                  {allItems
+                    .filter((data) => data.category === items.name)
+                    .map((data) => {
+                      return (
+                        <div
+                          className="ItemsData"
+                          style={{
+                            width: items.width > 650 ? "50%" : "100%",
+                          }}
+                        >
+                          <div className="NameAndPrice">
+                            <p className="itemNames">{data.name}</p>
+                            <div>
+                              <p className="price"> R{data.price}</p>
+                            </div>
                           </div>
+                          <div className="Information">{data.Information} </div>
                         </div>
-                        <div className="Information">{data.Information} </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
                 </div>
               </div>
             </Resizable>
@@ -234,8 +246,6 @@ function MenuPage3({
         );
       })}
       {images.map((item, i) => {
-        console.log(item);
-
         return (
           <Draggable
             defaultPosition={{
@@ -273,7 +283,9 @@ function MenuPage3({
               }}
               style={{
                 position: "absolute",
-                border: edit === "edit" ? "1px solid white" : "",
+                // border: "2px double white",
+
+                border: edit === "edit" ? "2px solid white" : "",
               }}
             >
               <div
@@ -293,7 +305,7 @@ function MenuPage3({
                   // margin: "auto",
                 }}
               >
-                {remove >= 0 && i === remove && (
+                {edit === "edit" && remove >= 0 && i === remove && (
                   <p
                     onClick={() => removeImageFromPage(item, i)}
                     style={{

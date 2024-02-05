@@ -31,6 +31,10 @@ function Menu({
   zoom,
   dragElement,
   resizeElement,
+  allItems,
+  id,
+  storeState,
+  setStoreState,
 }) {
   const PAGE = "menu1";
   const [body, setBody] = useState(images);
@@ -69,11 +73,10 @@ function Menu({
   const setContent = (data, ui) => {
     const xValue = ui.x;
     const yValue = ui.y;
-    data.data.forEach((items) => {
-      items.positionX = xValue.toString();
-      items.positionY = yValue.toString();
-      items.page = PAGE;
-    });
+    // data..forEach((items) => {
+    data.positionX = xValue.toString();
+    data.positionY = yValue.toString();
+    data.page = PAGE;
   };
   const setImage = (item, ui) => {
     const xValue = ui.x;
@@ -85,30 +88,41 @@ function Menu({
     // });
   };
   const removeItemFromPage = async (data, index) => {
-    data.data.forEach((items) => {
-      items.positionX = "None";
-      items.positionY = "None";
-      items.page = deleteField();
-    });
-    state[index].data.map((items, i) => {
-      const docRef = doc(db, data.name, items.id);
+    data.positionX = "None";
+    data.positionY = "None";
+    data.page = "None";
+    // state[index].data.map((items, i) => {
+    const docRef = doc(db, "BlazingStores", id);
+    const result = {};
+    
+    storeState.menuImages[index] = data;
+    result[storeState.store] = storeState;
+    localStorage.setItem("storeData", JSON.stringify(storeState));
 
-      updateDoc(docRef, items);
-    });
+    updateDoc(docRef, result);
     await fetchPost();
   };
   const removeImageFromPage = async (data, index) => {
     data.positionX = "None";
     data.positionY = "None";
-    const docRef = doc(db, "MenuImages", data.id);
     data.page = "None";
-    updateDoc(docRef, data);
+
+    const docRef = doc(db, "BlazingStores", id);
+    console.log(data, "DATA");
+    const result = {};
+
+    storeState.menuImages[index] = data;
+    result[storeState.store] = storeState;
+    localStorage.setItem("storeData", JSON.stringify(storeState));
+
+    updateDoc(docRef, result);
     await fetchImage();
   };
   const onResize = (event, { node, size, handle }) => {
     setBody({ height: size.height, width: size.width });
     // this.setState({ width: size.width, height: size.height });
   };
+  console.log(state, "STATE");
   return state.length > 0 || images.length > 0 ? (
     <div
       className="Menu"
@@ -122,10 +136,11 @@ function Menu({
       {state.map((items, i) => {
         let positionX = "";
         let positionY = "";
-        if (items.data.length > 0 && items.data[0].positionX != undefined) {
-          positionX = items.data[0].positionX;
-          positionY = items.data[0].positionY;
+        if (items.positionX != undefined) {
+          positionX = items.positionX;
+          positionY = items.positionY;
         }
+        console.log(items);
         return (
           <Draggable
             defaultPosition={{
@@ -139,8 +154,8 @@ function Menu({
           >
             <Resizable
               size={{
-                width: items.data[0].width,
-                height: items.height,
+                width: items.width,
+                // height: allItems.left * ,
               }}
               enable={{
                 top: resizeElement,
@@ -155,10 +170,10 @@ function Menu({
               onResizeStop={(e, direction, ref, d) => {
                 const bodyArr = [...state];
                 const newItem = items;
-                newItem.data.forEach((data) => {
-                  data.width = data.width + d.width;
-                  data.height = data.height + d.height;
-                });
+                // newItem.forEach((data) => {
+                newItem.width = newItem.width + d.width;
+                newItem.height = newItem.height + d.height;
+                // });
 
                 bodyArr[i] = newItem;
                 setState(bodyArr);
@@ -169,16 +184,17 @@ function Menu({
               }}
               style={{
                 position: "absolute",
-                border: "2px double white",
+                // border: "2px double white",
+                border: edit === "edit" ? "2px solid white" : "",
               }}
             >
               <div
                 // onDoubleClick={(e) => updateMenu(items, i, e)}
                 style={{
-                  // width: items.data[0].width,
+                  width: items.width,
                   // flex: "0 0 calc(33.33% - 10px)",
                   // maxWidth: "calc(33.33% - 10px)",
-                  height: `${items.data.length * 6.5}%`,
+                  // height: `${allItems.length * 6.5}%`,
                   // backgroundColor: "red",
                   margin: "1vh auto",
                   // border: "1px solid",
@@ -196,7 +212,7 @@ function Menu({
                   className="SectionName"
                   style={{ marginTop: "-1vh", height: "60px" }}
                 >
-                  {remove >= 0 && i === remove && (
+                  {edit === "edit" && remove >= 0 && i === remove && (
                     <p
                       onClick={() => removeItemFromPage(items, i)}
                       style={{
@@ -209,27 +225,31 @@ function Menu({
                       <MdOutlineCancel />
                     </p>
                   )}
+                  {console.log(items.name, "JHGH")}
                   <text>{items.name !== undefined && items.name}</text>
                 </div>
                 <div className="itemContainer">
-                  {items.data.map((data) => {
-                    return (
-                      <div
-                        className="ItemsData"
-                        style={{
-                          width: items.data[0].width > 650 ? "50%" : "100%",
-                        }}
-                      >
-                        <div className="NameAndPrice">
-                          <p className="itemNames">{data.name}</p>
-                          <div>
-                            <p className="price"> R{data.price}</p>
+                  {console.log(allItems, "ALLITEMS")}
+                  {allItems
+                    .filter((data) => data.category === items.name)
+                    .map((data) => {
+                      return (
+                        <div
+                          className="ItemsData"
+                          style={{
+                            width: items.width > 650 ? "50%" : "100%",
+                          }}
+                        >
+                          <div className="NameAndPrice">
+                            <p className="itemNames">{data.name}</p>
+                            <div>
+                              <p className="price"> R{data.price}</p>
+                            </div>
                           </div>
+                          <div className="Information">{data.Information} </div>
                         </div>
-                        <div className="Information">{data.Information} </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
                 </div>
               </div>
             </Resizable>
@@ -275,7 +295,8 @@ function Menu({
               }}
               style={{
                 position: "absolute",
-                border: "2px double white",
+                // border: "2px double white",
+                border: edit === "edit" ? "2px solid white" : "",
               }}
             >
               <div
@@ -295,7 +316,7 @@ function Menu({
                   // margin: "auto",
                 }}
               >
-                {remove >= 0 && i === remove && (
+                {edit === "edit" && remove >= 0 && i === remove && (
                   <p
                     onClick={() => removeImageFromPage(item, i)}
                     style={{

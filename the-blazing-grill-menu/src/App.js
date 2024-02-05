@@ -25,7 +25,7 @@ import { IoMdSave } from "react-icons/io";
 import * as htmlToImage from "html-to-image";
 
 // import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
-
+import MainPopup from "./frontend/MainPopup";
 import MenuPage3 from "./Menu3";
 function App() {
   const [state, setState] = useState([]);
@@ -37,9 +37,13 @@ function App() {
   const screenshotRef = useRef(null);
   const [dragElement, setDragElement] = useState(false);
   const [resizeElement, setResizeElement] = useState(false);
+  // Break
+  const [storeState, setStoreState] = useState(null);
+  const [id, setId] = useState("");
 
+  const [allItems, setAllItems] = useState([]);
   let MenuPage = window.location.href.split("?");
-  const PAGE = MenuPage[1] == undefined ? "menu2" : MenuPage[1];
+  const PAGE = MenuPage[1] == undefined ? "" : MenuPage[1];
   let newDataArr = [];
   let menuDataArr = [];
 
@@ -60,7 +64,7 @@ function App() {
         // var img = new Image();
         // img.src = dataUrl;
         // document.body.appendChild(img);
-        console.log(dataUrl, "Data URL");
+        // console.log(dataUrl, "Data URL");
         const link = document.createElement("a");
         link.download = "theblazinggrillmenu.png";
         link.href = dataUrl;
@@ -71,43 +75,72 @@ function App() {
       });
   };
   const fetchPost = async () => {
-    MenuItemsSection.map((data) => {
-      const unsubscribe = onSnapshot(
-        collection(db, data.name),
-        (querySnapshot) => {
-          const newData = querySnapshot.docs.map((doc) => ({
-            ...doc.data(),
-            positionX: doc.data().positionX ? doc.data().positionX : "None",
-            positionY: doc.data().positionY ? doc.data().positionY : "None",
-            id: doc.id,
-          }));
-          if (
-            newData.filter((data) => data.page === PAGE).length > 0 &&
-            newData[0].positionX !== "None"
-          ) {
-            newDataArr.push({
-              name: data.name,
-              data: newData,
-            });
-          } else {
-            let keys = [];
-            if (newData.length > 0) {
-              keys = Object.keys(newData[0]);
-            }
-            if (keys.length > 0 && !keys.includes("page")) {
-              // console.log(true);
-              menuDataArr.push({
-                name: data.name,
-                data: newData,
-              });
-            }
-          }
-          setState(newDataArr);
-          setMenu(menuDataArr);
+    // if (storeState === null) {
+    newDataArr = [];
+    menuDataArr = [];
+    let localStoreData = JSON.parse(localStorage.getItem("storeData"));
+    let localStoreId = localStorage.getItem("storeId");
+    setStoreState(localStoreData);
+    localStoreData.menuItems.map((data) => {
+      if (data.page === PAGE && data.positionX !== "None") {
+        newDataArr.push(data);
+      } else {
+        if (data.page === "None") {
+          menuDataArr.push(data);
+          console.log(data);
         }
-      );
-      data.unsubscribe = unsubscribe;
+      }
+      // setState(newDataArr);
+      // setMenu(menuDataArr);
     });
+    // }
+
+    console.log(storeState, "localStoreId");
+    setId(localStoreId);
+    setState(newDataArr);
+    setMenu(menuDataArr);
+    // console.log(storeState);
+    let ItemsDataArr = JSON.parse(localStorage.getItem("ITEMS"));
+    setAllItems(ItemsDataArr);
+    // MenuItemsSection.map((data) => {
+    //   const unsubscribe = onSnapshot(
+    //     collection(db, data.name),
+    //     (querySnapshot) => {
+    //       const newData = querySnapshot.docs.map((doc) => ({
+    //         ...doc.data(),
+    //         positionX: doc.data().positionX ? doc.data().positionX : "None",
+    //         positionY: doc.data().positionY ? doc.data().positionY : "None",
+    //         id: doc.id,
+    //       }));
+    //       // console.log(newData);
+    //       if (
+    //         newData.filter((data) => data.page === PAGE).length > 0 &&
+    //         newData[0].positionX !== "None"
+    //       ) {
+    //         newDataArr.push({
+    //           name: data.name,
+    //           data: newData,
+    //         });
+    //       } else {
+    //         let keys = [];
+    //         if (newData.length > 0) {
+    //           keys = Object.keys(newData[0]);
+    //         }
+    //         if (keys.length > 0 && !keys.includes("page")) {
+    //           // console.log(true);
+    //           menuDataArr.push({
+    //             name: data.name,
+    //             data: newData,
+    //           });
+    //         }
+    //       }
+    //       // setState(newDataArr);
+    //       // setMenu(menuDataArr);
+    //       console.log(newDataArr, "Hello", menuDataArr);
+    //     }
+    //   );
+    //   data.unsubscribe = unsubscribe;
+    // });
   };
   // const getImages = async (newData) => {
   //   const reference = ref(storage, "/images");
@@ -133,28 +166,28 @@ function App() {
   //     });
   // };
   const fetchImage = async () => {
-    let data = {};
-    const unsubscribe = onSnapshot(
-      collection(db, "MenuImages"),
-      (querySnapshot) => {
-        const newData = querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          // positionX: doc.data().positionX ? doc.data().positionX : "None",
-          // positionY: doc.data().positionY ? doc.data().positionY : "None",
-          id: doc.id,
-        }));
-        setPageImages(
-          newData.filter((item) => item.page !== "None" && item.page === PAGE)
-        );
-        const result = newData.filter((item) => item.page === "None");
-        setImages(result);
-        // getImages(newData);
+    let localStoreData = JSON.parse(localStorage.getItem("storeData"));
+    // const newData = localStoreData.menuImages;
+    //     console.log(newData, 179);
+
+    let newImageArr = [];
+    let imageArr = [];
+
+    // let localStoreId = localStorage.getItem("storeId");
+    setStoreState(localStoreData);
+    localStoreData.menuImages.map((data) => {
+      if (data.page === PAGE && data.positionX !== "None") {
+        newImageArr.push(data);
+      } else {
+        if (data.page === "None") {
+          imageArr.push(data);
+        }
       }
-    );
-    data.unsubscribe = unsubscribe;
+    });
+    setPageImages(newImageArr);
+    setImages(imageArr);
   };
   useEffect(() => {
-    fetchImage();
     const unsubscribe = onSnapshot(
       collection(db, "MenuPages"),
       (querySnapshot) => {
@@ -162,12 +195,13 @@ function App() {
           ...doc.data(),
           id: doc.id,
         }))[0];
-        console.log(newData, "NEW");
         setMenuPages(newData);
         setZoom(parseInt(newData[PAGE]) / 100);
       }
     );
     fetchPost();
+    fetchImage();
+
     // Clean up the listeners when the component unmounts
     return () => {
       MenuItemsSection.forEach((data) => {
@@ -179,49 +213,88 @@ function App() {
     };
   }, []);
   const updateData = async (data, index) => {
-    menu[index].data.map((items, i) => {
-      const docRef = doc(db, data.name, items.id);
-      // console.log(items);
-      items.positionX = "0";
-      items.positionY = "0";
-      items.width = items.width == undefined ? 200 : items.width;
-      items.height = items.height == undefined ? 500 : items.height;
-      items.page = PAGE;
-      updateDoc(docRef, items);
-    });
+    console.log(menu, 219);
+    console.log(data, 220);
+    // menu[index].data.map((items, i) => {
+    const docRef = doc(db, "BlazingStores", id);
+    console.log(docRef);
+    data.positionX = "100";
+    data.positionY = "100";
+    data.width = data.width == undefined ? 200 : data.width;
+    data.height = data.height == undefined ? 500 : data.height;
+    data.page = PAGE;
+    // menu[index] = data;
+    // storeState.menuItems = menu;
+    const result = {};
+    result[storeState.store] = storeState;
+    console.log(result, 232);
+    localStorage.setItem("storeData", JSON.stringify(storeState));
+
+    updateDoc(docRef, result);
+    // });
     await fetchPost();
   };
   const updateImages = async (data, index) => {
-    const docRef = doc(db, "MenuImages", data.id);
-    const newDocument = {
-      url: data.url,
-      positionX: "0",
-      positionY: "0",
-      page: PAGE,
-      width: 200,
-      height: 100,
-    };
-    await updateDoc(docRef, newDocument);
+    const docRef = doc(db, "BlazingStores", id);
+
+    data.positionX = "0";
+    data.positionY = "0";
+    data.page = PAGE;
+    data.width = 300;
+    data.height = 200;
+    const result = {};
+    storeState.menuImages[index] = data;
+    result[storeState.store] = storeState;
+    console.log(100, storeState.menuImages, data);
+    localStorage.setItem("storeData", JSON.stringify(storeState));
+
+    await updateDoc(docRef, result);
     await fetchImage();
   };
   const updateMenuItemsAndData = async () => {
+    console.log(state, "STATE");
+    for (let i = 0; i < storeState.menuItems.length; i++) {
+      for (let j = 0; j < state.length; j++) {
+        if (storeState.menuItems[i].name === state[j].name) {
+          storeState.menuItems[i] = state[j];
+        }
+      }
+    }
+    // pageImages
+    for (let i = 0; i < storeState.menuImages.length; i++) {
+      for (let j = 0; j < pageImages.length; j++) {
+        if (storeState.menuImages[i].id === pageImages[j].id) {
+          storeState.menuImages[i] = pageImages[j];
+        }
+      }
+    }
+
     try {
-      for (let i = 0; i < state.length; i++) {
-        state[i].data.forEach(async (data) => {
-          const docRef = doc(db, data.category, data.id);
-          await updateDoc(docRef, data);
-        });
-      }
-      for (let i = 0; i < pageImages.length; i++) {
-        const docRef = doc(db, "MenuImages", pageImages[i].id);
-        await updateDoc(docRef, pageImages[i]);
-      }
+      // for (let i = 0; i < state.length; i++) {
+      //   state[i].data.forEach(async (data) => {
+      //     //BlazingStores
+      //   });
+      // }
+      const docRef = doc(db, "BlazingStores", id);
+      const result = {};
+      result[storeState.store] = storeState;
+
+      localStorage.setItem("storeData", JSON.stringify(storeState));
+
+      await updateDoc(docRef, result);
       let MenueDocRef = doc(db, "MenuPages", menuPages.id);
       const newMenuPage = {
         ...menuPages,
         [PAGE]: parseInt(zoom * 100).toString(),
       };
       await updateDoc(MenueDocRef, newMenuPage);
+
+      for (let i = 0; i < pageImages.length; i++) {
+        const docRef = doc(db, "MenuImages", pageImages[i].id);
+        await updateDoc(docRef, pageImages[i]);
+        console.log(pageImages[i]);
+      }
+
       alert("Menu items have been updated successfully");
     } catch (err) {
       alert(err, "Please try again later");
@@ -282,6 +355,10 @@ function App() {
           zoom={zoom}
           dragElement={dragElement}
           resizeElement={resizeElement}
+          allItems={allItems}
+          id={id}
+          storeState={storeState}
+          setStoreState={setStoreState}
         />
       ) : PAGE === "menu2" ? (
         <MenuPage2
@@ -297,8 +374,12 @@ function App() {
           zoom={zoom}
           dragElement={dragElement}
           resizeElement={resizeElement}
+          allItems={allItems}
+          id={id}
+          storeState={storeState}
+          setStoreState={setStoreState}
         />
-      ) : (
+      ) : PAGE === "menu3" ? (
         <MenuPage3
           fetchPost={fetchPost}
           menu={menu}
@@ -312,6 +393,17 @@ function App() {
           zoom={zoom}
           dragElement={dragElement}
           resizeElement={resizeElement}
+          allItems={allItems}
+          id={id}
+          storeState={storeState}
+          setStoreState={setStoreState}
+        />
+      ) : (
+        <MainPopup
+          setStoreState={setStoreState}
+          storeState={storeState}
+          setId={setId}
+          id={id}
         />
       )}
       {MenuPage[2] === "edit" && (

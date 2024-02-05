@@ -185,3 +185,16 @@ Menu Page 2
   align-items: center;
   cursor: pointer;
 }
+.MainPopup {
+  width: 700px;
+  height: 500px;
+  position: absolute;
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: white;
+  border: 2px solid #f7941d;
+  border-radius: 10px;
+}
