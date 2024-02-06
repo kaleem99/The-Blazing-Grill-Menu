@@ -87,7 +87,7 @@ function App() {
       } else {
         if (data.page === "None") {
           menuDataArr.push(data);
-          console.log(data);
+          // console.log(data);
         }
       }
       // setState(newDataArr);
@@ -95,7 +95,7 @@ function App() {
     });
     // }
 
-    console.log(storeState, "localStoreId");
+    // console.log(storeState, "localStoreId");
     setId(localStoreId);
     setState(newDataArr);
     setMenu(menuDataArr);
@@ -213,11 +213,9 @@ function App() {
     };
   }, []);
   const updateData = async (data, index) => {
-    console.log(menu, 219);
-    console.log(data, 220);
+  
     // menu[index].data.map((items, i) => {
     const docRef = doc(db, "BlazingStores", id);
-    console.log(docRef);
     data.positionX = "100";
     data.positionY = "100";
     data.width = data.width == undefined ? 200 : data.width;
@@ -227,7 +225,6 @@ function App() {
     // storeState.menuItems = menu;
     const result = {};
     result[storeState.store] = storeState;
-    console.log(result, 232);
     localStorage.setItem("storeData", JSON.stringify(storeState));
 
     updateDoc(docRef, result);

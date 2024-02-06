@@ -110,10 +110,11 @@ const Popup2 = ({
           setStore(
             data.find((store) => Object.keys(store)[0] === event.target.value)
           );
-          console.log(store);
         }}
       >
-        <option value={"None"}>None</option>
+        <option disabled selected value={null}>
+          None
+        </option>
         {data.map((store, index) => {
           let keyName = Object.keys(store)[0];
           let idName = Object.keys(store)[1];
@@ -125,33 +126,39 @@ const Popup2 = ({
         })}
       </select>
       <div className="ImageUrlsDiv">
-        {imageUrls.map((url, i) => (
-          <div className="ImageInnerUrlDiv">
-            {selectedImages.includes(url) ? (
-              <div className="checkMarkPopupImage">
-                <RiCheckboxBlankCircleFill />
-              </div>
-            ) : (
-              <div className="checkMarkPopupImage2">
-                <RiCheckboxBlankCircleFill />
-              </div>
-            )}
+        {store !== null &&
+          imageUrls.map(
+            (url, i) =>
+              !store[Object.keys(store)[0]].menuImages
+                .map((data) => data.url)
+                .includes(url) && (
+                <div className="ImageInnerUrlDiv">
+                  {selectedImages.includes(url) ? (
+                    <div className="checkMarkPopupImage">
+                      <RiCheckboxBlankCircleFill />
+                    </div>
+                  ) : (
+                    <div className="checkMarkPopupImage2">
+                      <RiCheckboxBlankCircleFill />
+                    </div>
+                  )}
 
-            <img
-              onClick={() => imageOnClickEvent(url, i)}
-              alt=""
-              className="ImageUrlImage"
-              width={"150px"}
-              height={"90px"}
-              style={
-                selectedImages.includes(url)
-                  ? { border: "3px solid #006600" }
-                  : {}
-              }
-              src={url}
-            ></img>
-          </div>
-        ))}
+                  <img
+                    onClick={() => imageOnClickEvent(url, i)}
+                    alt=""
+                    className="ImageUrlImage"
+                    width={"150px"}
+                    height={"90px"}
+                    style={
+                      selectedImages.includes(url)
+                        ? { border: "3px solid #006600" }
+                        : {}
+                    }
+                    src={url}
+                  ></img>
+                </div>
+              )
+          )}
       </div>
       <button onClick={() => addImagesToStore()} className="EnterButton">
         Enter
