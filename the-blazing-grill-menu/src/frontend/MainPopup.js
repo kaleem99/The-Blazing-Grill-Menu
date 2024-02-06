@@ -1,23 +1,21 @@
 import { db } from "../database/config";
 import { collection, onSnapshot, getDoc, getDocs } from "firebase/firestore";
 import databaseNames from "../database/databaseNames";
-import { useState, useEffect } from "react";
+import { FaBackward, FaForward } from "react-icons/fa";
+
 import MenuItemsSection from "./menuSections";
+
+import { useState, useEffect } from "react";
+
+import { CSSTransition } from "react-transition-group";
+import "./TransitionExample.css"; // Create this CSS file for transitions
+import Popup1 from "./MainPopupFiles/Popup1";
+import Popup2 from "./MainPopupFiles/Popup2";
+
 const MainPopup = ({ setStoreState, storeState, setId, id }) => {
-  const menuOptions = [
-    { name: "Menu1", selected: false },
-    { name: "Menu2", selected: false },
-    { name: "Menu3", selected: false },
-  ];
-  const otherOptions = [
-    { name: "Edit", selected: false },
-    { name: "View", selected: false },
-  ];
   const [data, setData] = useState([]); // Initialize state for storing data
   const [store, setStore] = useState(null);
-  const [menu, setMenu] = useState(null);
-  const [mode, setMode] = useState(null);
-
+  const [currentIndex, setCurrentIndex] = useState(0);
   useEffect(() => {
     const unsubscribe = onSnapshot(
       collection(db, databaseNames[0]),
@@ -42,104 +40,63 @@ const MainPopup = ({ setStoreState, storeState, setId, id }) => {
       unsubscribe();
     };
   }, []);
+  const contentArray = [
+    <Popup1
+      setStoreState={setStoreState}
+      storeState={storeState}
+      setId={setId}
+      id={id}
+      data={data}
+      setData={setData}
+      store={store}
+      setStore={setStore}
+    />,
+    <Popup2
+      setStoreState={setStoreState}
+      storeState={storeState}
+      setId={setId}
+      id={id}
+      data={data}
+      setData={setData}
+      store={store}
+      setStore={setStore}
+    />,
+    "Content 3",
+  ];
 
-  const setDataFunct = () => {
-    if (store === null || menu === null || mode === null) {
-      return alert("Please select ensure to select all options.");
-    }
-    let newMode = `?${mode.name.toLowerCase()}`;
-    if (mode.name.toLowerCase() === "view") {
-      newMode = "";
-    }
-    let keyName = Object.keys(store)[0];
-    let idName = Object.keys(store)[1];
-    setId(store[idName]);
-    setStoreState(store[keyName]);
-    localStorage.setItem("storeData", JSON.stringify(store[keyName]));
-    localStorage.setItem("storeId", store[idName]);
-    let result = [];
-    MenuItemsSection.map(async (data) => {
-      const unsubscribe = await onSnapshot(
-        collection(db, data.name),
-        async (querySnapshot) => {
-          const newData = await querySnapshot.docs.map((doc) => ({
-            ...doc.data(),
-            // positionX: doc.data().positionX ? doc.data().positionX : "None",
-            // positionY: doc.data().positionY ? doc.data().positionY : "None",
-            id: doc.id,
-          }));
-          console.log(newData);
-          result.push(...newData);
-        }
-      );
-
-      data.unsubscribe = unsubscribe;
-    });
-
-    setTimeout(() => {
-      localStorage.setItem("ITEMS", JSON.stringify(result));
-      window.location.href += "?" + menu.name.toLowerCase() + newMode;
-      //   "?menu1?edit";
-    }, 1000);
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % contentArray.length);
   };
-  return (
-    <div className="MainPopup">
-      <h1>Please select a store</h1>
-      <select
-        className="selectMenu"
-        onChange={(event) =>
-          setStore(
-            data.find((store) => Object.keys(store)[0] === event.target.value)
-          )
-        }
-      >
-        <option value={"None"}>None</option>
-        {data.map((store, index) => {
-          let keyName = Object.keys(store)[0];
-          let idName = Object.keys(store)[1];
-          return (
-            <option key={index} value={keyName}>
-              {keyName}
-            </option>
-          );
-        })}
-      </select>
-      <h2>Select a menu</h2>
-      <div className="menuAndEditViewOptions">
-        {menuOptions.map((opt) => (
-          <div
-            style={
-              menu !== null && menu.name === opt.name
-                ? { color: "#f7941d" }
-                : {}
-            }
-            onClick={(e) => setMenu({ ...opt, selected: true })}
-            className="menuAndEditViewOptionsItem"
-          >
-            {opt.name}
-          </div>
-        ))}
-      </div>
-      <h2>Select a mode</h2>
 
-      <div style={{ width: "50%" }} className="menuAndEditViewOptions">
-        {otherOptions.map((opt) => (
-          <div
-            style={
-              mode !== null && mode.name === opt.name
-                ? { color: "#f7941d" }
-                : {}
-            }
-            className="menuAndEditViewOptionsItem"
-            onClick={(e) => setMode({ ...opt, selected: true })}
+  const handleBack = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? contentArray.length - 1 : prevIndex - 1
+    );
+  };
+
+  return (
+    <div>
+      <div className="content-container">
+        {contentArray.map((content, index) => (
+          <CSSTransition
+            key={index}
+            in={index === currentIndex}
+            timeout={500}
+            classNames="slide"
+            unmountOnExit
           >
-            {opt.name}
-          </div>
+            <div className="content">{content}</div>
+          </CSSTransition>
         ))}
+        <div className="NextAndBackMainPopup">
+          <button className="AddButton2" onClick={handleBack}>
+            <FaBackward />
+          </button>
+          <button className="AddButton" onClick={handleNext}>
+            <FaForward />
+          </button>
+        </div>
       </div>
-      <button onClick={() => setDataFunct()} className="EnterButton">
-        Enter
-      </button>
     </div>
   );
 };

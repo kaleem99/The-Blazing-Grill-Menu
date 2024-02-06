@@ -233,7 +233,66 @@ Menu Page 2
   font-size: large;
   cursor: pointer;
 }
-.EnterButton:hover {
+button:hover {
   background-color: #f7941d;
   color: white;
+}
+.AddButton {
+  position: absolute;
+  right: 10px;
+  bottom: 0px;
+  width: 100px;
+  height: 35px;
+  margin: 10% auto;
+  border-radius: 5px;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+}
+.AddButton2 {
+  position: absolute;
+  left: 10px;
+  bottom: 0px;
+  width: 100px;
+  height: 35px;
+  margin: 10% auto;
+  border-radius: 5px;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+}
+.ImageUrlsDiv {
+  width: 96%;
+  height: 350px;
+  border: 1px solid white;
+  margin: auto;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-gap: 10px;
+  overflow-x: hidden;
+}
+.ImageInnerUrlDiv {
+  width: auto;
+  height: 100px;
+  margin: auto;
+}
+.checkMarkPopupImage {
+  position: relative;
+  top: 30%;
+  left: -40%;
+  color: #006600;
+  font-size: larger;
+}
+.checkMarkPopupImage2 {
+  position: relative;
+  top: 30%;
+  left: -40%;
+  color: transparent;
+  font-size: larger;
+}
+.ImageUrlImage {
+  margin: auto;
+  border: 2px solid;
+  cursor: pointer;
 }

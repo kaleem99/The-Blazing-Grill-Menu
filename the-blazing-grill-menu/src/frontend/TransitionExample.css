@@ -1,0 +1,35 @@
+.slide-enter {
+    opacity: 0;
+    /* transform: translateX(100%); */
+  }
+  
+  .slide-enter-active {
+    opacity: 1;
+    /* transform: translateX(0); Adjusted to center */
+    transition: opacity 500ms, transform 500ms;
+  }
+  
+  .slide-exit {
+    opacity: 1;
+    /* transform: translateX(0); */
+  }
+  
+  .slide-exit-active {
+    opacity: 0;
+    /* transform: translateX(100%); Adjusted to center */
+    transition: opacity 500ms, transform 500ms;
+  }
+  .NextAndBackMainPopup{
+    width: 400px;
+    margin: auto;
+    position: absolute;
+    top: 200;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    /* border: 1px solid; */
+    align-items: center;
+    justify-content: center;
+    display: flex;
+  }
