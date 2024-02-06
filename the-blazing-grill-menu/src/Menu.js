@@ -94,7 +94,7 @@ function Menu({
     // state[index].data.map((items, i) => {
     const docRef = doc(db, "BlazingStores", id);
     const result = {};
-    
+
     storeState.menuImages[index] = data;
     result[storeState.store] = storeState;
     localStorage.setItem("storeData", JSON.stringify(storeState));
@@ -103,15 +103,18 @@ function Menu({
     await fetchPost();
   };
   const removeImageFromPage = async (data, index) => {
-    data.positionX = "None";
+   data.positionX = "None";
     data.positionY = "None";
-    data.page = "None";
-
     const docRef = doc(db, "BlazingStores", id);
-    console.log(data, "DATA");
+    data.page = "None";
+    // setStoreState(storeState);
     const result = {};
-
-    storeState.menuImages[index] = data;
+    for (let i = 0; i < storeState.menuImages.length; i++) {
+      if (storeState.menuImages[i].id === data.id) {
+        storeState.menuImages[i] = data;
+        break;
+      }
+    }
     result[storeState.store] = storeState;
     localStorage.setItem("storeData", JSON.stringify(storeState));
 

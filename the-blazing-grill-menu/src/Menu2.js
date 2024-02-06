@@ -108,7 +108,12 @@ function MenuPage2({
     data.page = "None";
     // setStoreState(storeState);
     const result = {};
-    storeState.menuImages[index] = data;
+    for (let i = 0; i < storeState.menuImages.length; i++) {
+      if (storeState.menuImages[i].id === data.id) {
+        storeState.menuImages[i] = data;
+        break;
+      }
+    }
     result[storeState.store] = storeState;
     localStorage.setItem("storeData", JSON.stringify(storeState));
 
