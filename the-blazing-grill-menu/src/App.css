@@ -187,14 +187,53 @@ Menu Page 2
 }
 .MainPopup {
   width: 700px;
-  height: 500px;
+  height: 520px;
   position: absolute;
   margin: auto;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
-  background-color: white;
-  border: 2px solid #f7941d;
+  border: 2px solid white;
+  color: white;
   border-radius: 10px;
+  background-image: url("./assets/smokeyBackground1024_1.png");
+}
+.selectMenu {
+  width: 50%;
+  height: 30px;
+  font-size: large;
+}
+.menuAndEditViewOptions {
+  display: flex;
+  width: 70%;
+  margin: 4% auto;
+}
+.menuAndEditViewOptionsItem {
+  width: 120px;
+  height: 70px;
+  border: 1px solid;
+  margin: auto;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  font-size: larger;
+  cursor: pointer;
+}
+.menuAndEditViewOptionsItem:hover {
+  color: #f7941d;
+}
+.EnterButton {
+  width: 200px;
+  height: 40px;
+  margin: 2% auto;
+  border-radius: 5px;
+  border: none;
+  font-size: large;
+  cursor: pointer;
+}
+.EnterButton:hover {
+  background-color: #f7941d;
+  color: white;
 }
