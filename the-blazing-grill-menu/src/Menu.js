@@ -110,7 +110,7 @@ function Menu({
     // setStoreState(storeState);
     const result = {};
     for (let i = 0; i < storeState.menuImages.length; i++) {
-      if (storeState.menuImages[i].id === data.id) {
+      if (storeState.menuImages[i].url === data.url) {
         storeState.menuImages[i] = data;
         break;
       }

@@ -71,11 +71,16 @@ const Popup1 = ({
       <h1>Please select a store</h1>
       <select
         className="selectMenu"
-        onChange={(event) =>
-          setStore(
-            data.find((store) => Object.keys(store)[0] === event.target.value)
-          )
-        }
+        onChange={(event) => {
+          {
+            setStore(
+              data.find((store) => Object.keys(store)[0] === event.target.value)
+            );
+            console.log(
+              data.find((store) => Object.keys(store)[0] === event.target.value)
+            );
+          }
+        }}
       >
         <option value={"None"}>None</option>
         {data.map((store, index) => {

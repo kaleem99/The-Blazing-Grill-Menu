@@ -64,8 +64,7 @@ function MenuPage3({
   //   });
   // };
   const mouseOver = (e, i) => {
-    console.log(i);
-    console.log(state[i]);
+
     setRemove(i);
     e.currentTarget.style.color = "red";
   };
@@ -112,7 +111,7 @@ function MenuPage3({
     // setStoreState(storeState);
     const result = {};
     for (let i = 0; i < storeState.menuImages.length; i++) {
-      if (storeState.menuImages[i].id === data.id) {
+      if (storeState.menuImages[i].url === data.url) {
         storeState.menuImages[i] = data;
         break;
       }

@@ -243,16 +243,23 @@ function App() {
     data.width = 300;
     data.height = 200;
     const result = {};
-    storeState.menuImages[index] = data;
+    // storeState.menuImages[index] = data;
+    for (let i = 0; i < storeState.menuImages.length; i++) {
+      if (storeState.menuImages[i].url === data.url) {
+        storeState.menuImages[i] = data;
+        break;
+      }
+    }
     result[storeState.store] = storeState;
     console.log(100, storeState.menuImages, data);
+
+    // return 0;
     localStorage.setItem("storeData", JSON.stringify(storeState));
 
     await updateDoc(docRef, result);
     await fetchImage();
   };
   const updateMenuItemsAndData = async () => {
-    console.log(state, "STATE");
     for (let i = 0; i < storeState.menuItems.length; i++) {
       for (let j = 0; j < state.length; j++) {
         if (storeState.menuItems[i].name === state[j].name) {
@@ -263,7 +270,7 @@ function App() {
     // pageImages
     for (let i = 0; i < storeState.menuImages.length; i++) {
       for (let j = 0; j < pageImages.length; j++) {
-        if (storeState.menuImages[i].id === pageImages[j].id) {
+        if (storeState.menuImages[i].url === pageImages[j].url) {
           storeState.menuImages[i] = pageImages[j];
         }
       }
@@ -289,15 +296,16 @@ function App() {
       };
       await updateDoc(MenueDocRef, newMenuPage);
 
-      for (let i = 0; i < pageImages.length; i++) {
-        const docRef = doc(db, "MenuImages", pageImages[i].id);
-        await updateDoc(docRef, pageImages[i]);
-        console.log(pageImages[i]);
-      }
+      // for (let i = 0; i < pageImages.length; i++) {
+      //   const docRef = doc(db, "MenuImages", pageImages[i].id);
+      //   await updateDoc(docRef, pageImages[i]);
+      //   console.log(pageImages[i]);
+      // }
 
       alert("Menu items have been updated successfully");
     } catch (err) {
-      alert(err, "Please try again later");
+      alert(err + " Please try again later");
+      console.log(err)
     }
     setDragElement(false);
     setResizeElement(false);
@@ -404,6 +412,7 @@ function App() {
           storeState={storeState}
           setId={setId}
           id={id}
+          fetchImage={fetchImage}
         />
       )}
       {MenuPage[2] === "edit" && (

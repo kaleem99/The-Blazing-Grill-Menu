@@ -12,7 +12,7 @@ import "./TransitionExample.css"; // Create this CSS file for transitions
 import Popup1 from "./MainPopupFiles/Popup1";
 import Popup2 from "./MainPopupFiles/Popup2";
 
-const MainPopup = ({ setStoreState, storeState, setId, id }) => {
+const MainPopup = ({ setStoreState, storeState, setId, id, fetchImage }) => {
   const [data, setData] = useState([]); // Initialize state for storing data
   const [store, setStore] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -60,6 +60,7 @@ const MainPopup = ({ setStoreState, storeState, setId, id }) => {
       setData={setData}
       store={store}
       setStore={setStore}
+      fetchImage={fetchImage}
     />,
     "Content 3",
   ];
