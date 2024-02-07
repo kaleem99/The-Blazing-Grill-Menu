@@ -228,7 +228,6 @@ function Menu({
                       <MdOutlineCancel />
                     </p>
                   )}
-                  {console.log(items.name, "JHGH")}
                   <text>{items.name !== undefined && items.name}</text>
                 </div>
                 <div className="itemContainer">
