@@ -1,7 +1,7 @@
-import logo from "./logo.svg";
+// import logo from "./logo.svg";
 import "./App.css";
-import Menu from "./Menu";
-import MenuPage2 from "./Menu2";
+// import Menu from "./Menu";
+// import MenuPage2 from "./Menu2";
 import { useState, useEffect, useRef } from "react";
 import Draggable from "react-draggable";
 import { db } from "./database/config";
@@ -14,7 +14,7 @@ import {
   collection,
   addDoc,
 } from "firebase/firestore";
-import { getDownloadURL, ref, listAll } from "firebase/storage";
+// import { getDownloadURL, ref, listAll } from "firebase/storage";
 import {
   MdOutlineScreenshot,
   MdBackHand,
@@ -24,7 +24,6 @@ import { IoMdSave } from "react-icons/io";
 
 import * as htmlToImage from "html-to-image";
 
-// import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
 import MainPopup from "./frontend/MainPopup";
 import MenuPage3 from "./Menu3";
 function App() {
@@ -53,18 +52,9 @@ function App() {
       // height: 1000, // A4 height in pixels
     };
     const node = screenshotRef.current;
-
-    // Set the width and height of the container to ensure 100% coverage
-    // node.style.width = '100vw';
-    // node.style.height = '100vh';
-
     htmlToImage
       .toPng(node, options)
       .then(function (dataUrl) {
-        // var img = new Image();
-        // img.src = dataUrl;
-        // document.body.appendChild(img);
-        // console.log(dataUrl, "Data URL");
         const link = document.createElement("a");
         link.download = "theblazinggrillmenu.png";
         link.href = dataUrl;
@@ -90,90 +80,20 @@ function App() {
           // console.log(data);
         }
       }
-      // setState(newDataArr);
-      // setMenu(menuDataArr);
+   
     });
     // }
 
-    // console.log(storeState, "localStoreId");
     setId(localStoreId);
     setState(newDataArr);
     setMenu(menuDataArr);
-    // console.log(storeState);
     let ItemsDataArr = JSON.parse(localStorage.getItem("ITEMS"));
     setAllItems(ItemsDataArr);
-    // MenuItemsSection.map((data) => {
-    //   const unsubscribe = onSnapshot(
-    //     collection(db, data.name),
-    //     (querySnapshot) => {
-    //       const newData = querySnapshot.docs.map((doc) => ({
-    //         ...doc.data(),
-    //         positionX: doc.data().positionX ? doc.data().positionX : "None",
-    //         positionY: doc.data().positionY ? doc.data().positionY : "None",
-    //         id: doc.id,
-    //       }));
-    //       // console.log(newData);
-    //       if (
-    //         newData.filter((data) => data.page === PAGE).length > 0 &&
-    //         newData[0].positionX !== "None"
-    //       ) {
-    //         newDataArr.push({
-    //           name: data.name,
-    //           data: newData,
-    //         });
-    //       } else {
-    //         let keys = [];
-    //         if (newData.length > 0) {
-    //           keys = Object.keys(newData[0]);
-    //         }
-    //         if (keys.length > 0 && !keys.includes("page")) {
-    //           // console.log(true);
-    //           menuDataArr.push({
-    //             name: data.name,
-    //             data: newData,
-    //           });
-    //         }
-    //       }
-    //       // setState(newDataArr);
-    //       // setMenu(menuDataArr);
-    //       console.log(newDataArr, "Hello", menuDataArr);
-    //     }
-    //   );
-    //   data.unsubscribe = unsubscribe;
-    // });
   };
-  // const getImages = async (newData) => {
-  //   const reference = ref(storage, "/images");
-  //   listAll(reference)
-  //     .then((result) => {
-  //       const promises = result.items.map(async (item) => {
-  //         const url = await getDownloadURL(item);
-  //         return url;
-  //       });
-  //       return Promise.all(promises);
-  //     })
-  //     .then((urls) => {
-  //       // console.log(urls, "URLS");
-  //       const filteredURL = urls.filter((url) => {
-  //         return newData.some((image) => image.url !== url);
-  //       });
-  //       console.log(filteredURL, "Hello World");
-  //       console.log(newData);
-  //       setImages(filteredURL);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching images:", error);
-  //     });
-  // };
   const fetchImage = async () => {
     let localStoreData = JSON.parse(localStorage.getItem("storeData"));
-    // const newData = localStoreData.menuImages;
-    //     console.log(newData, 179);
-
     let newImageArr = [];
     let imageArr = [];
-
-    // let localStoreId = localStorage.getItem("storeId");
     setStoreState(localStoreData);
     localStoreData.menuImages.map((data) => {
       if (data.page === PAGE && data.positionX !== "None") {
@@ -188,21 +108,16 @@ function App() {
     setImages(imageArr);
   };
   useEffect(() => {
-    const unsubscribe = onSnapshot(
-      collection(db, "MenuPages"),
-      (querySnapshot) => {
-        const newData = querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))[0];
-        setMenuPages(newData);
-        setZoom(parseInt(newData[PAGE]) / 100);
-      }
-    );
+    onSnapshot(collection(db, "MenuPages"), (querySnapshot) => {
+      const newData = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }))[0];
+      setMenuPages(newData);
+      setZoom(parseInt(newData[PAGE]) / 100);
+    });
     fetchPost();
     fetchImage();
-
-    // Clean up the listeners when the component unmounts
     return () => {
       MenuItemsSection.forEach((data) => {
         if (data.unsubscribe) {
@@ -213,16 +128,12 @@ function App() {
     };
   }, []);
   const updateData = async (data, index) => {
-  
-    // menu[index].data.map((items, i) => {
     const docRef = doc(db, "BlazingStores", id);
     data.positionX = "100";
     data.positionY = "100";
     data.width = data.width == undefined ? 200 : data.width;
     data.height = data.height == undefined ? 500 : data.height;
     data.page = PAGE;
-    // menu[index] = data;
-    // storeState.menuItems = menu;
     const result = {};
     result[storeState.store] = storeState;
     localStorage.setItem("storeData", JSON.stringify(storeState));
@@ -240,7 +151,6 @@ function App() {
     data.width = 300;
     data.height = 200;
     const result = {};
-    // storeState.menuImages[index] = data;
     for (let i = 0; i < storeState.menuImages.length; i++) {
       if (storeState.menuImages[i].url === data.url) {
         storeState.menuImages[i] = data;
@@ -249,8 +159,6 @@ function App() {
     }
     result[storeState.store] = storeState;
     console.log(100, storeState.menuImages, data);
-
-    // return 0;
     localStorage.setItem("storeData", JSON.stringify(storeState));
 
     await updateDoc(docRef, result);
@@ -274,11 +182,6 @@ function App() {
     }
 
     try {
-      // for (let i = 0; i < state.length; i++) {
-      //   state[i].data.forEach(async (data) => {
-      //     //BlazingStores
-      //   });
-      // }
       const docRef = doc(db, "BlazingStores", id);
       const result = {};
       result[storeState.store] = storeState;
@@ -292,17 +195,10 @@ function App() {
         [PAGE]: parseInt(zoom * 100).toString(),
       };
       await updateDoc(MenueDocRef, newMenuPage);
-
-      // for (let i = 0; i < pageImages.length; i++) {
-      //   const docRef = doc(db, "MenuImages", pageImages[i].id);
-      //   await updateDoc(docRef, pageImages[i]);
-      //   console.log(pageImages[i]);
-      // }
-
       alert("Menu items have been updated successfully");
     } catch (err) {
       alert(err + " Please try again later");
-      console.log(err)
+      console.log(err);
     }
     setDragElement(false);
     setResizeElement(false);
@@ -312,7 +208,6 @@ function App() {
       {MenuPage[2] === "edit" && (
         <Draggable>
           <div className="sideBar">
-            {/* {console.log(menu)} */}
             <button
               className="react-icon"
               onClick={() => updateMenuItemsAndData()}
@@ -346,45 +241,7 @@ function App() {
         </Draggable>
       )}
 
-      {PAGE === "menu1" ? (
-        <Menu
-          fetchPost={fetchPost}
-          menu={menu}
-          setMenu={setMenu}
-          state={state}
-          setState={setState}
-          edit={MenuPage[2]}
-          images={pageImages}
-          fetchImage={fetchImage}
-          reference={screenshotRef}
-          zoom={zoom}
-          dragElement={dragElement}
-          resizeElement={resizeElement}
-          allItems={allItems}
-          id={id}
-          storeState={storeState}
-          setStoreState={setStoreState}
-        />
-      ) : PAGE === "menu2" ? (
-        <MenuPage2
-          fetchPost={fetchPost}
-          menu={menu}
-          setMenu={setMenu}
-          state={state}
-          setState={setState}
-          edit={MenuPage[2]}
-          images={pageImages}
-          fetchImage={fetchImage}
-          reference={screenshotRef}
-          zoom={zoom}
-          dragElement={dragElement}
-          resizeElement={resizeElement}
-          allItems={allItems}
-          id={id}
-          storeState={storeState}
-          setStoreState={setStoreState}
-        />
-      ) : PAGE === "menu3" ? (
+      {PAGE === "menu1" || PAGE === "menu2" || PAGE === "menu3" ? (
         <MenuPage3
           fetchPost={fetchPost}
           menu={menu}
@@ -402,6 +259,7 @@ function App() {
           id={id}
           storeState={storeState}
           setStoreState={setStoreState}
+          PAGE={PAGE}
         />
       ) : (
         <MainPopup

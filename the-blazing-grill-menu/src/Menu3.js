@@ -32,8 +32,9 @@ function MenuPage3({
   allItems,
   id,
   storeState,
+  PAGE
 }) {
-  const PAGE = "menu3";
+  // const PAGE = "menu3";
   const [remove, setRemove] = useState(-1);
   const [body, setBody] = useState(images);
 
