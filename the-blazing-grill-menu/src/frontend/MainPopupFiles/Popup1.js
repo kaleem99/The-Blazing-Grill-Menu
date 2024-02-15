@@ -27,7 +27,7 @@ const Popup1 = ({
   const [menu, setMenu] = useState(null);
   const [mode, setMode] = useState(null);
 
-  const setDataFunct = () => {
+  const setDataFunct = async () => {
     if (store === null || menu === null || mode === null) {
       return alert("Please select ensure to select all options.");
     }
@@ -39,10 +39,10 @@ const Popup1 = ({
     let idName = Object.keys(store)[1];
     setId(store[idName]);
     setStoreState(store[keyName]);
-    localStorage.setItem("storeData", JSON.stringify(store[keyName]));
-    localStorage.setItem("storeId", store[idName]);
+    await localStorage.setItem("storeData", JSON.stringify(store[keyName]));
+    await localStorage.setItem("storeId", store[idName]);
     let result = [];
-    MenuItemsSection.map(async (data) => {
+    await MenuItemsSection.map(async (data) => {
       const unsubscribe = await onSnapshot(
         collection(db, data.name),
         async (querySnapshot) => {
@@ -64,7 +64,7 @@ const Popup1 = ({
       localStorage.setItem("ITEMS", JSON.stringify(result));
       window.location.href += "?" + menu.name.toLowerCase() + newMode;
       //   "?menu1?edit";
-    }, 1000);
+    }, 2000);
   };
   return (
     <div className="MainPopup">
@@ -72,14 +72,9 @@ const Popup1 = ({
       <select
         className="selectMenu"
         onChange={(event) => {
-          {
-            setStore(
-              data.find((store) => Object.keys(store)[0] === event.target.value)
-            );
-            console.log(
-              data.find((store) => Object.keys(store)[0] === event.target.value)
-            );
-          }
+          setStore(
+            data.find((store) => Object.keys(store)[0] === event.target.value)
+          );
         }}
       >
         <option value={"None"}>None</option>
@@ -129,9 +124,6 @@ const Popup1 = ({
       <button onClick={() => setDataFunct()} className="EnterButton">
         Enter
       </button>
-      {/* <button onClick={() => console.log("Add Images")} className="AddButton">
-        <TbPlayerTrackNextFilled />
-      </button> */}
     </div>
   );
 };

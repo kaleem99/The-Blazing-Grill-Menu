@@ -1,21 +1,9 @@
 import { useEffect, useState } from "react";
-import { db, storage } from "./database/config";
-import MenuItemsSection from "./frontend/menuSections";
-import Burger from "./assets/BurgersMenu.jpg";
-import pizza2 from "./assets/VegetarianPizza.jpg";
-import sanhaImage from "./assets/newSanhaLogo.png";
+import { db, storage } from "../database/config";
 import Draggable from "react-draggable";
 import { MdOutlineCancel } from "react-icons/md";
 import { Resizable } from "re-resizable";
-import {
-  collection,
-  addDoc,
-  getDocs,
-  updateDoc,
-  doc,
-  deleteDoc,
-  deleteField,
-} from "firebase/firestore";
+import { updateDoc, doc } from "firebase/firestore";
 function MenuPage3({
   state,
   setState,
@@ -32,25 +20,11 @@ function MenuPage3({
   allItems,
   id,
   storeState,
-  PAGE
+  PAGE,
 }) {
-  // const PAGE = "menu3";
   const [remove, setRemove] = useState(-1);
   const [body, setBody] = useState(images);
 
-  const updateMenu = async (data, index, e) => {
-    state[index].data.map((items, i) => {
-      const docRef = doc(db, data.name, items.id);
-      updateDoc(docRef, items);
-    });
-    await fetchPost();
-  };
-  const updateImage = async (item, index, e) => {
-    // const item = images[index];
-    console.log(item);
-    const docRef = doc(db, "MenuImages", item.id);
-    updateDoc(docRef, item);
-  };
   // const fetchPost = async (name) => {
   //   let newDataArr = [];
   //   MenudataSection.map(async (data) => {
@@ -65,7 +39,6 @@ function MenuPage3({
   //   });
   // };
   const mouseOver = (e, i) => {
-
     setRemove(i);
     e.currentTarget.style.color = "red";
   };

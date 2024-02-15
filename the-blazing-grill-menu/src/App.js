@@ -25,7 +25,7 @@ import { IoMdSave } from "react-icons/io";
 import * as htmlToImage from "html-to-image";
 
 import MainPopup from "./frontend/MainPopup";
-import MenuPage3 from "./Menu3";
+import MenuPage3 from "./frontend/Menu3";
 function App() {
   const [state, setState] = useState([]);
   const [menu, setMenu] = useState([]);
@@ -69,29 +69,30 @@ function App() {
     newDataArr = [];
     menuDataArr = [];
     let localStoreData = JSON.parse(localStorage.getItem("storeData"));
-    let localStoreId = localStorage.getItem("storeId");
-    setStoreState(localStoreData);
-    localStoreData.menuItems.map((data) => {
-      if (data.page === PAGE && data.positionX !== "None") {
-        newDataArr.push(data);
-      } else {
-        if (data.page === "None") {
-          menuDataArr.push(data);
-          // console.log(data);
+    if (localStoreData) {
+      let localStoreId = localStorage.getItem("storeId");
+      setStoreState(localStoreData);
+      localStoreData.menuItems.forEach((data) => {
+        if (data.page === PAGE && data.positionX !== "None") {
+          newDataArr.push(data);
+        } else {
+          if (data.page === "None") {
+            menuDataArr.push(data);
+            // console.log(data);
+          }
         }
-      }
-   
-    });
-    // }
+      });
+      // }
 
-    setId(localStoreId);
-    setState(newDataArr);
-    setMenu(menuDataArr);
-    let ItemsDataArr = JSON.parse(localStorage.getItem("ITEMS"));
-    setAllItems(ItemsDataArr);
+      setId(localStoreId);
+      setState(newDataArr);
+      setMenu(menuDataArr);
+      let ItemsDataArr = JSON.parse(localStorage.getItem("ITEMS"));
+      setAllItems(ItemsDataArr);
+      fetchImage(localStoreData);
+    }
   };
-  const fetchImage = async () => {
-    let localStoreData = JSON.parse(localStorage.getItem("storeData"));
+  const fetchImage = async (localStoreData) => {
     let newImageArr = [];
     let imageArr = [];
     setStoreState(localStoreData);
@@ -117,7 +118,6 @@ function App() {
       setZoom(parseInt(newData[PAGE]) / 100);
     });
     fetchPost();
-    fetchImage();
     return () => {
       MenuItemsSection.forEach((data) => {
         if (data.unsubscribe) {
