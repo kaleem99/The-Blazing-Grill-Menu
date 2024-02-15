@@ -4,6 +4,7 @@ import "./App.css";
 // import MenuPage2 from "./Menu2";
 import { useState, useEffect, useRef } from "react";
 import Draggable from "react-draggable";
+import { connect, useDispatch } from "react-redux";
 import { db } from "./database/config";
 import MenuItemsSection from "./frontend/menuSections";
 import { storage } from "./database/config";
@@ -26,21 +27,22 @@ import * as htmlToImage from "html-to-image";
 
 import MainPopup from "./frontend/MainPopup";
 import MenuPage3 from "./frontend/Menu3";
-function App() {
-  const [state, setState] = useState([]);
-  const [menu, setMenu] = useState([]);
-  const [images, setImages] = useState([]);
-  const [pageImages, setPageImages] = useState([]);
+import { UPDATE_APP_STATE } from "./redux/constants";
+function App({ storeState, id, state, menu, allItems, pageImages, images }) {
+  // const [state1, setState] = useState([]);
+  // const [menu1, setMenu] = useState([]);
+  // const [images1, setImages] = useState([]);
+  // const [pageImages1, setPageImages] = useState([]);
   const [zoom, setZoom] = useState(0.8);
   const [menuPages, setMenuPages] = useState([]);
   const screenshotRef = useRef(null);
   const [dragElement, setDragElement] = useState(false);
   const [resizeElement, setResizeElement] = useState(false);
   // Break
-  const [storeState, setStoreState] = useState(null);
-  const [id, setId] = useState("");
-
-  const [allItems, setAllItems] = useState([]);
+  // const [storeState1, setStoreState] = useState(null);
+  // const [id1, setId] = useState("");
+  const dispatch = useDispatch();
+  // const [allItems1, setAllItems] = useState([]);
   let MenuPage = window.location.href.split("?");
   const PAGE = MenuPage[1] == undefined ? "" : MenuPage[1];
   let newDataArr = [];
@@ -65,48 +67,54 @@ function App() {
       });
   };
   const fetchPost = async () => {
+    console.log(state, id, storeState, allItems, pageImages, images);
     // if (storeState === null) {
-    newDataArr = [];
-    menuDataArr = [];
-    let localStoreData = JSON.parse(localStorage.getItem("storeData"));
-    if (localStoreData) {
-      let localStoreId = localStorage.getItem("storeId");
-      setStoreState(localStoreData);
-      localStoreData.menuItems.forEach((data) => {
-        if (data.page === PAGE && data.positionX !== "None") {
-          newDataArr.push(data);
-        } else {
-          if (data.page === "None") {
-            menuDataArr.push(data);
-            // console.log(data);
-          }
-        }
-      });
-      // }
+    dispatch({ type: UPDATE_APP_STATE, payload: { PAGE: PAGE } });
+    // newDataArr = [];
+    // menuDataArr = [];
+    // let localStoreData = JSON.parse(localStorage.getItem("storeData"));
+    // if (localStoreData) {
+    //   let localStoreId = localStorage.getItem("storeId");
+    //   setStoreState(localStoreData);
+    //   localStoreData.menuItems.forEach((data) => {
+    //     if (data.page === PAGE && data.positionX !== "None") {
+    //       newDataArr.push(data);
+    //     } else {
+    //       if (data.page === "None") {
+    //         menuDataArr.push(data);
+    //         // console.log(data);
+    //       }
+    //     }
+    //   });
+    //   // }
 
-      setId(localStoreId);
-      setState(newDataArr);
-      setMenu(menuDataArr);
-      let ItemsDataArr = JSON.parse(localStorage.getItem("ITEMS"));
-      setAllItems(ItemsDataArr);
-      fetchImage(localStoreData);
-    }
+    //   setId(localStoreId);
+    //   setState(newDataArr);
+    //   setMenu(menuDataArr);
+    //   let ItemsDataArr = JSON.parse(localStorage.getItem("ITEMS"));
+    //   setAllItems(ItemsDataArr);
+
+    //   //
+      // fetchImage();
+    // }
   };
   const fetchImage = async (localStoreData) => {
-    let newImageArr = [];
-    let imageArr = [];
-    setStoreState(localStoreData);
-    localStoreData.menuImages.map((data) => {
-      if (data.page === PAGE && data.positionX !== "None") {
-        newImageArr.push(data);
-      } else {
-        if (data.page === "None") {
-          imageArr.push(data);
-        }
-      }
-    });
-    setPageImages(newImageArr);
-    setImages(imageArr);
+    dispatch({ type: UPDATE_APP_STATE, payload: { PAGE: PAGE } });
+
+    // let newImageArr = [];
+    // let imageArr = [];
+    // setStoreState(localStoreData);
+    // localStoreData.menuImages.map((data) => {
+    //   if (data.page === PAGE && data.positionX !== "None") {
+    //     newImageArr.push(data);
+    //   } else {
+    //     if (data.page === "None") {
+    //       imageArr.push(data);
+    //     }
+    //   }
+    // });
+    // setPageImages(newImageArr);
+    // setImages(imageArr);
   };
   useEffect(() => {
     onSnapshot(collection(db, "MenuPages"), (querySnapshot) => {
@@ -240,33 +248,39 @@ function App() {
           </div>
         </Draggable>
       )}
-
+  {/* allItems,
+    id,
+    images,
+    menu,
+    pageImages,
+    state,
+    storeData, */}
       {PAGE === "menu1" || PAGE === "menu2" || PAGE === "menu3" ? (
         <MenuPage3
           fetchPost={fetchPost}
-          menu={menu}
-          setMenu={setMenu}
-          state={state}
-          setState={setState}
+          // menu={menu}
+          // setMenu={setMenu}
+          // state={state}
+          // setState={setState}
           edit={MenuPage[2]}
-          images={pageImages}
+          // images={pageImages}
           fetchImage={fetchImage}
           reference={screenshotRef}
           zoom={zoom}
           dragElement={dragElement}
           resizeElement={resizeElement}
-          allItems={allItems}
-          id={id}
-          storeState={storeState}
-          setStoreState={setStoreState}
+          // allItems={allItems}
+          // id={id}
+          // storeState={storeState}
+          // setStoreState={setStoreState}
           PAGE={PAGE}
         />
       ) : (
         <MainPopup
-          setStoreState={setStoreState}
-          storeState={storeState}
-          setId={setId}
-          id={id}
+          // setStoreState={setStoreState}
+          // storeState={storeState}
+          // setId={setId}
+          // id={id}
           fetchImage={fetchImage}
         />
       )}
@@ -316,5 +330,17 @@ function App() {
     </div>
   );
 }
-
-export default App;
+const mapStateToProps = (data) => {
+  const { storeState, id, state, menu, allItems, pageImages, images } =
+    data.appStateReducer;
+  return {
+    storeState,
+    id,
+    state,
+    menu,
+    allItems,
+    pageImages,
+    images,
+  };
+};
+export default connect(mapStateToProps)(App);

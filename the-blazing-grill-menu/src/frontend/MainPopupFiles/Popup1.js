@@ -1,29 +1,18 @@
 import { db } from "../../database/config";
 import { collection, onSnapshot, getDoc, getDocs } from "firebase/firestore";
 import databaseNames from "../../database/databaseNames";
-// import { TbPlayerTrackNextFilled } from "react-icons/tb";
 import MenuItemsSection from "../menuSections";
-import { useState, useEffect } from "react";
-const Popup1 = ({
-  setStoreState,
-  storeState,
-  setId,
-  id,
-  data,
-  setData,
-  store,
-  setStore,
-}) => {
-  const menuOptions = [
-    { name: "Menu1", selected: false },
-    { name: "Menu2", selected: false },
-    { name: "Menu3", selected: false },
-  ];
-  const otherOptions = [
-    { name: "Edit", selected: false },
-    { name: "View", selected: false },
-  ];
-
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import {
+  UPDATE_STORE_STATE,
+  UPDATE_ID_STATE,
+  otherOptions,
+  menuOptions,
+} from "../../redux/constants";
+import MappedOptions from "../../Helpers.js/displayMappedOptions";
+const Popup1 = ({ data, store, setStore }) => {
+  const dispatch = useDispatch();
   const [menu, setMenu] = useState(null);
   const [mode, setMode] = useState(null);
 
@@ -37,8 +26,8 @@ const Popup1 = ({
     }
     let keyName = Object.keys(store)[0];
     let idName = Object.keys(store)[1];
-    setId(store[idName]);
-    setStoreState(store[keyName]);
+    dispatch({ type: UPDATE_ID_STATE, payload: store[idName] });
+    dispatch({ type: UPDATE_STORE_STATE, payload: store[keyName] });
     await localStorage.setItem("storeData", JSON.stringify(store[keyName]));
     await localStorage.setItem("storeId", store[idName]);
     let result = [];
@@ -48,11 +37,8 @@ const Popup1 = ({
         async (querySnapshot) => {
           const newData = await querySnapshot.docs.map((doc) => ({
             ...doc.data(),
-            // positionX: doc.data().positionX ? doc.data().positionX : "None",
-            // positionY: doc.data().positionY ? doc.data().positionY : "None",
             id: doc.id,
           }));
-          console.log(newData);
           result.push(...newData);
         }
       );
@@ -63,7 +49,6 @@ const Popup1 = ({
     setTimeout(() => {
       localStorage.setItem("ITEMS", JSON.stringify(result));
       window.location.href += "?" + menu.name.toLowerCase() + newMode;
-      //   "?menu1?edit";
     }, 2000);
   };
   return (
@@ -80,7 +65,7 @@ const Popup1 = ({
         <option value={"None"}>None</option>
         {data.map((store, index) => {
           let keyName = Object.keys(store)[0];
-          let idName = Object.keys(store)[1];
+          // let idName = Object.keys(store)[1];
           return (
             <option key={index} value={keyName}>
               {keyName}
@@ -90,7 +75,12 @@ const Popup1 = ({
       </select>
       <h2>Select a menu</h2>
       <div className="menuAndEditViewOptions">
-        {menuOptions.map((opt) => (
+        <MappedOptions
+          optionsData={menuOptions}
+          menu={menu}
+          setMenu={setMenu}
+        />
+        {/* {menuOptions.map((opt) => (
           <div
             style={
               menu !== null && menu.name === opt.name
@@ -102,12 +92,17 @@ const Popup1 = ({
           >
             {opt.name}
           </div>
-        ))}
+        ))} */}
       </div>
       <h2>Select a mode</h2>
 
       <div style={{ width: "50%" }} className="menuAndEditViewOptions">
-        {otherOptions.map((opt) => (
+        <MappedOptions
+          optionsData={otherOptions}
+          menu={mode}
+          setMenu={setMode}
+        />
+        {/* {otherOptions.map((opt) => (
           <div
             style={
               mode !== null && mode.name === opt.name
@@ -119,7 +114,7 @@ const Popup1 = ({
           >
             {opt.name}
           </div>
-        ))}
+        ))} */}
       </div>
       <button onClick={() => setDataFunct()} className="EnterButton">
         Enter

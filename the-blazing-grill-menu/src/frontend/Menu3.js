@@ -4,14 +4,15 @@ import Draggable from "react-draggable";
 import { MdOutlineCancel } from "react-icons/md";
 import { Resizable } from "re-resizable";
 import { updateDoc, doc } from "firebase/firestore";
+import { connect, useDispatch } from "react-redux";
 function MenuPage3({
   state,
-  setState,
-  menu,
-  setMenu,
+  // setState,
+  // menu,
+  // setMenu,
   fetchPost,
   edit,
-  images,
+  pageImages,
   fetchImage,
   reference,
   zoom,
@@ -23,21 +24,8 @@ function MenuPage3({
   PAGE,
 }) {
   const [remove, setRemove] = useState(-1);
-  const [body, setBody] = useState(images);
-
-  // const fetchPost = async (name) => {
-  //   let newDataArr = [];
-  //   MenudataSection.map(async (data) => {
-  //     await getDocs(collection(db, data.name)).then((querySnapshot) => {
-  //       const newData = querySnapshot.docs.map((doc) => ({
-  //         ...doc.data(),
-  //         // id: doc.id,
-  //       }));
-  //       newDataArr.push({ name: data.name, data: newData });
-  //       setState(newDataArr);
-  //     });
-  //   });
-  // };
+  const [body, setBody] = useState(pageImages);
+  const dispatch = useDispatch();
   const mouseOver = (e, i) => {
     setRemove(i);
     e.currentTarget.style.color = "red";
@@ -96,7 +84,7 @@ function MenuPage3({
     updateDoc(docRef, result);
     await fetchImage();
   };
-  return state.length > 0 || images.length > 0 ? (
+  return state.length > 0 || pageImages.length > 0 ? (
     <div
       className="Menu"
       ref={reference}
@@ -138,7 +126,9 @@ function MenuPage3({
                 // });
 
                 bodyArr[i] = newItem;
-                setState(bodyArr);
+                // setState(bodyArr);
+                dispatch({ type: "RESIZE_ITEMS_STATE", payload: bodyArr });
+
                 // setBody({
                 //   width: body.width + d.width,
                 //   height: body.height + d.height,
@@ -223,7 +213,7 @@ function MenuPage3({
           </Draggable>
         );
       })}
-      {images.map((item, i) => {
+      {pageImages.map((item, i) => {
         return (
           <Draggable
             defaultPosition={{
@@ -243,11 +233,7 @@ function MenuPage3({
                 newItem.width = newItem.width + d.width;
                 newItem.height = newItem.height + d.height;
                 bodyArr[i] = newItem;
-                setBody(bodyArr);
-                // setBody({
-                //   width: body.width + d.width,
-                //   height: body.height + d.height,
-                // });
+                dispatch({ type: "RESIZE_IMAGES_STATE", payload: bodyArr });
               }}
               enable={{
                 top: resizeElement,
@@ -315,5 +301,19 @@ function MenuPage3({
     <div></div>
   );
 }
+const mapStateToProps = (data) => {
+  const { allItems, id, images, menu, pageImages, state, storeData } =
+    data.appStateReducer;
+  console.log(pageImages);
 
-export default MenuPage3;
+  return {
+    allItems,
+    id,
+    images,
+    menu,
+    pageImages,
+    state,
+    storeData,
+  };
+};
+export default connect(mapStateToProps)(MenuPage3);

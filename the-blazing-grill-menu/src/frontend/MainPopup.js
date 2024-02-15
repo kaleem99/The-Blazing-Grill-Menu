@@ -11,11 +11,15 @@ import { CSSTransition } from "react-transition-group";
 import "./TransitionExample.css"; // Create this CSS file for transitions
 import Popup1 from "./MainPopupFiles/Popup1";
 import Popup2 from "./MainPopupFiles/Popup2";
+import { connect, useDispatch } from "react-redux";
+import { BACK, NEXT } from "../redux/constants";
 
-const MainPopup = ({ setStoreState, storeState, setId, id, fetchImage }) => {
+const MainPopup = ({ storeState, id, fetchImage, currentIndex }) => {
+  console.log(currentIndex);
   const [data, setData] = useState([]); // Initialize state for storing data
   const [store, setStore] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // const [currentIndex, setCurrentIndex] = useState(0);
+  const dispatch = useDispatch();
   useEffect(() => {
     const unsubscribe = onSnapshot(
       collection(db, databaseNames[0]),
@@ -42,9 +46,9 @@ const MainPopup = ({ setStoreState, storeState, setId, id, fetchImage }) => {
   }, []);
   const contentArray = [
     <Popup1
-      setStoreState={setStoreState}
+      // setStoreState={setStoreState}
       storeState={storeState}
-      setId={setId}
+      // setId={setId}
       id={id}
       data={data}
       setData={setData}
@@ -52,9 +56,9 @@ const MainPopup = ({ setStoreState, storeState, setId, id, fetchImage }) => {
       setStore={setStore}
     />,
     <Popup2
-      setStoreState={setStoreState}
+      // setStoreState={setStoreState}
       storeState={storeState}
-      setId={setId}
+      // setId={setId}
       id={id}
       data={data}
       setData={setData}
@@ -66,13 +70,11 @@ const MainPopup = ({ setStoreState, storeState, setId, id, fetchImage }) => {
   ];
 
   const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % contentArray.length);
+    dispatch({ type: NEXT, payload: { contentArray } });
   };
 
   const handleBack = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? contentArray.length - 1 : prevIndex - 1
-    );
+    dispatch({ type: BACK, payload: { contentArray } });
   };
 
   return (
@@ -101,7 +103,17 @@ const MainPopup = ({ setStoreState, storeState, setId, id, fetchImage }) => {
     </div>
   );
 };
-export default MainPopup;
+
+const mapStateToProps = (state) => {
+  console.log(state);
+  const { storeState, id } = state.appStateReducer;
+  return {
+    currentIndex: state.mainPopupNextAndBackReducer,
+    storeState,
+    id,
+  };
+};
+export default connect(mapStateToProps)(MainPopup);
 
 //  I would like to find out which project codes i should use for CCA projects when logging time.
 // awesome could you please send me when you have time the project MMID and type for CCA edio v2 CCALMS2-27975

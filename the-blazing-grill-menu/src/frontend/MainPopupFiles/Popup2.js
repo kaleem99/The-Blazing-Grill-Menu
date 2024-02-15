@@ -168,3 +168,10 @@ const Popup2 = ({
 };
 
 export default Popup2;
+// const mapStateToProps = async (state) => {
+//   console.log(await state.fetchImagesReducer);
+//   return {
+//     imageUrls: state.fetchImagesReducer,
+//   };
+// };
+// export default connect(mapStateToProps)(Popup2);
