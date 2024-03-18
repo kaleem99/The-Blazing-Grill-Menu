@@ -298,7 +298,7 @@ function MenuPage3({
       })}
     </div>
   ) : (
-    <div></div>
+    <div className="Menu"></div>
   );
 }
 const mapStateToProps = (data) => {

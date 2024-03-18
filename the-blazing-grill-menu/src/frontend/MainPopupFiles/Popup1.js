@@ -28,6 +28,7 @@ const Popup1 = ({ data, store, setStore }) => {
     let idName = Object.keys(store)[1];
     dispatch({ type: UPDATE_ID_STATE, payload: store[idName] });
     dispatch({ type: UPDATE_STORE_STATE, payload: store[keyName] });
+    console.log(store[keyName]);
     await localStorage.setItem("storeData", JSON.stringify(store[keyName]));
     await localStorage.setItem("storeId", store[idName]);
     let result = [];
