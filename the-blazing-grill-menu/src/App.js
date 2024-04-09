@@ -38,6 +38,8 @@ function App({ storeState, id, state, menu, allItems, pageImages, images }) {
   const screenshotRef = useRef(null);
   const [dragElement, setDragElement] = useState(false);
   const [resizeElement, setResizeElement] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
   // Break
   // const [storeState1, setStoreState] = useState(null);
   // const [id1, setId] = useState("");
@@ -95,7 +97,7 @@ function App({ storeState, id, state, menu, allItems, pageImages, images }) {
     //   setAllItems(ItemsDataArr);
 
     //   //
-      // fetchImage();
+    // fetchImage();
     // }
   };
   const fetchImage = async (localStoreData) => {
@@ -211,8 +213,35 @@ function App({ storeState, id, state, menu, allItems, pageImages, images }) {
     setDragElement(false);
     setResizeElement(false);
   };
+  const handleFullScreenToggle = () => {
+    if (!isFullScreen) {
+      // Enter full-screen mode
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        /* Safari */
+        document.documentElement.webkitRequestFullscreen();
+      } else if (document.documentElement.msRequestFullscreen) {
+        /* IE11 */
+        document.documentElement.msRequestFullscreen();
+      }
+    } else {
+      // Exit full-screen mode
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        /* Safari */
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        /* IE11 */
+        document.msExitFullscreen();
+      }
+    }
+    setIsFullScreen(!isFullScreen); // Toggle full-screen state
+  };
+
   return (
-    <div className="App">
+    <div className="App" onDoubleClick={(e) => handleFullScreenToggle()}>
       {MenuPage[2] === "edit" && (
         <Draggable>
           <div className="sideBar">
@@ -248,7 +277,7 @@ function App({ storeState, id, state, menu, allItems, pageImages, images }) {
           </div>
         </Draggable>
       )}
-  {/* allItems,
+      {/* allItems,
     id,
     images,
     menu,
