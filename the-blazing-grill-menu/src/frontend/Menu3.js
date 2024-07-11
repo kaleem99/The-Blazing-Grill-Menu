@@ -26,6 +26,14 @@ function MenuPage3({
   const [remove, setRemove] = useState(-1);
   const [body, setBody] = useState(pageImages);
   const dispatch = useDispatch();
+  useEffect(() => {
+    document.addEventListener("keydown", (e) => {
+      console.log(e);
+      if (e.key === "P") {
+        window.print();
+      }
+    });
+  }, []);
   const mouseOver = (e, i) => {
     setRemove(i);
     e.currentTarget.style.color = "red";
@@ -51,6 +59,7 @@ function MenuPage3({
     console.log(item, 88);
     // });
   };
+
   const removeItemFromPage = async (data, index) => {
     data.positionX = "None";
     data.positionY = "None";
@@ -84,10 +93,12 @@ function MenuPage3({
     updateDoc(docRef, result);
     await fetchImage();
   };
+
   return state.length > 0 || pageImages.length > 0 ? (
     <div
       className="Menu"
       ref={reference}
+      // onClick={() => !edit && window.print()}
       style={
         edit === "edit"
           ? { zoom: zoom, border: "3px solid white" }
